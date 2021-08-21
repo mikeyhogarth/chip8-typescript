@@ -70,11 +70,30 @@ describe("call", () => {
 describe("skipIf", () => {
   it("Skips next instruction if Vx = kk", () => {
     const kk = 0xf0;
-    cpu.execute(opcodes.skipIf, { x: 0, kk });
+
+    // when register 0 is NOT set to KK, it should NOT skip
+    cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
     expect(cpu.pc).toEqual(0x202);
 
+    // when register 0 is NOT set to KK, it should skip
     cpu.registers[0] = kk;
-    cpu.execute(opcodes.skipIf, { x: 0, kk });
+    cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
+    expect(cpu.pc).toEqual(0x206);
+  });
+});
+
+// 4xkk - SNE Vx, byte
+describe("skipNotIf", () => {
+  it("Skips next instruction if Vx = kk", () => {
+    const kk = 0xf0;
+
+    // when register 0 is NOT set to KK, it should skip
+    cpu.execute(opcodes.skipIfNotEqual, { x: 0, kk });
+    expect(cpu.pc).toEqual(0x204);
+
+    // when register 0 is set to KK, it should NOT skip
+    cpu.registers[0] = kk;
+    cpu.execute(opcodes.skipIfNotEqual, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
