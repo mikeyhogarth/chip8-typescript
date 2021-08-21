@@ -8,12 +8,12 @@ export type IOpcodeArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
 export interface IOpcode {
   execute: (cpu: ICpu, args?: IOpcodeArgs) => void;
-  // Some opcodes mess around with the PC directly: we won't want to be
-  // automatically incrementing it for these.
-  manipulatesPC?: boolean;
+  // Each opcode has a "pattern" and a "mask" that will reveal that pattern.
+  pattern: number;
+  mask: number;
 }
 
-enum OpcodeMneumonics {
+export enum OpcodeMneumonic {
   sys = "sys",
   cls = "cls",
   jmp = "jmp",
@@ -25,9 +25,11 @@ enum OpcodeMneumonics {
   load = "load",
 }
 
-export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
+export const opcodes: { [key in OpcodeMneumonic]: IOpcode } = {
   // 0nnn - SYS addr
   sys: {
+    pattern: 0x0000,
+    mask: 0xf000,
     execute: (cpu) => {
       cpu.pc += 0x2;
     },
@@ -35,6 +37,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 00E0 - CLS
   cls: {
+    pattern: 0x00e0,
+    mask: 0x00f0,
     execute(cpu) {
       cpu.getIo().clearDisplay();
       cpu.pc += 0x2;
@@ -43,7 +47,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 00EE - RET
   ret: {
-    manipulatesPC: true,
+    pattern: 0x00ee,
+    mask: 0x00ff,
     execute(cpu) {
       if (cpu.sp <= -1) throw new Error("Stack Underflow");
       cpu.pc = cpu.stack[cpu.sp];
@@ -53,7 +58,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 1nnn - JP addr
   jmp: {
-    manipulatesPC: true,
+    pattern: 0x1000,
+    mask: 0xf000,
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.pc = nnn;
@@ -62,7 +68,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 2nnn - CALL addr
   call: {
-    manipulatesPC: true,
+    pattern: 0x2000,
+    mask: 0xf000,
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.sp++;
@@ -73,7 +80,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 3xkk - SE Vx, byte
   skipIfEqual: {
-    manipulatesPC: true,
+    pattern: 0x3000,
+    mask: 0xf000,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 4 : 2;
@@ -82,7 +90,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 4xkk - SNE Vx, byte
   skipIfNotEqual: {
-    manipulatesPC: true,
+    pattern: 0x4000,
+    mask: 0xf000,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 2 : 4;
@@ -91,7 +100,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 5xy0 - SE Vx, Vy
   skipIfEqualRegisters: {
-    manipulatesPC: true,
+    pattern: 0x5000,
+    mask: 0xf00f,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.pc += cpu.registers[x] === cpu.registers[y] ? 4 : 2;
@@ -100,6 +110,8 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 6xkk - LD Vx, byte
   load: {
+    pattern: 0x6000,
+    mask: 0xf000,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;

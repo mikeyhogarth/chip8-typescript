@@ -1,9 +1,13 @@
-import { createCpu } from "./cpu";
+import { createCpu, ICpu } from "./cpu";
+import { OpcodeMneumonic } from "./opcodes";
+
+let cpu: ICpu;
+beforeEach(() => {
+  cpu = createCpu();
+});
 
 describe("createCpu", () => {
   it("returns a valid, fresh CPU", () => {
-    const cpu = createCpu();
-
     expect(cpu.registers.length).toEqual(16);
     expect(cpu.stack.length).toEqual(16);
     expect(cpu.memory.length).toEqual(4096);
@@ -16,7 +20,6 @@ describe("createCpu", () => {
 
 describe("load", () => {
   it("loads the given data into memory", () => {
-    const cpu = createCpu();
     cpu.load(new Uint8ClampedArray([0x60, 0xaa, 0x60, 0xbb]));
 
     // Those chunks above should have been loaded into 4 memory slots...
@@ -29,10 +32,13 @@ describe("load", () => {
 
 describe("fetch", () => {
   it("Fetches the word currently being pointed to by the PC", () => {
-    const cpu = createCpu();
     cpu.load(new Uint8ClampedArray([0x60, 0xaa]));
 
     // fetching should return the whole word representing the opcode
     expect(cpu.fetch()).toEqual(0x60aa);
   });
+});
+
+describe("decode", () => {
+  // we're going to test each opcode works
 });
