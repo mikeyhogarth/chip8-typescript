@@ -36,7 +36,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   // 00E0 - CLS
   cls: {
     execute(cpu) {
-      cpu.getInterface().clearDisplay();
+      cpu.getIo().clearDisplay();
     },
   },
 

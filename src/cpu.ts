@@ -16,7 +16,7 @@ export interface ICpu {
   soundTimer: number;
 
   // the interchangable IO interface
-  getInterface: () => IOInterface;
+  getIo: () => IOInterface;
 
   execute: (opcode: IOpcode, args?: IOpcodeArgs) => void;
 }
@@ -41,7 +41,7 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
     delayTimer: 0,
     execute,
     // the IO interface (in memory by default)
-    getInterface: () => io,
+    getIo: () => io,
   };
 }
 

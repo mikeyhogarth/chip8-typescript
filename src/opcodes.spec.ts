@@ -23,7 +23,7 @@ describe("cls", () => {
     cpu.execute(opcodes.cls);
 
     // clearDisplay behavior already tested elsewhere.
-    expect(cpu.getInterface().clearDisplay).toHaveBeenCalled();
+    expect(cpu.getIo().clearDisplay).toHaveBeenCalled();
     expect(cpu.pc).toEqual(0x202);
   });
 });
