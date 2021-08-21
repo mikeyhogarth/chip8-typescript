@@ -10,10 +10,10 @@ beforeEach(() => {
 
 // 0nnn - SYS addr
 describe("sys", () => {
-  it("does nothing - this is not needed by modern interpreters", () => {
+  it("does nothing except increment the PC - this operand is unused by modern interpreters", () => {
     const originalCpu = JSON.stringify(cpu);
     cpu.execute(opcodes.sys, { nnn: 0xf00 });
-    expect(JSON.stringify(cpu)).toEqual(originalCpu);
+    expect(cpu.pc).toEqual(0x202);
   });
 });
 
@@ -25,6 +25,7 @@ describe("cls", () => {
 
     // clearDisplay behavior already tested elsewhere.
     expect(cpu.getInterface().clearDisplay).toHaveBeenCalled();
+    expect(cpu.pc).toEqual(0x202);
   });
 });
 
@@ -63,5 +64,18 @@ describe("call", () => {
     expect(cpu.sp).toEqual(0);
     expect(cpu.stack[cpu.sp]).toEqual(0x200);
     expect(cpu.pc).toEqual(0xf00);
+  });
+});
+
+// 3xkk - SE Vx, byte
+describe("skipIf", () => {
+  it("Skips next instruction if Vx = kk", () => {
+    const kk = 0xf0;
+    cpu.execute(opcodes.skipIf, { x: 0, kk });
+    expect(cpu.pc).toEqual(0x202);
+
+    cpu.registers[0] = kk;
+    cpu.execute(opcodes.skipIf, { x: 0, kk });
+    expect(cpu.pc).toEqual(0x206);
   });
 });

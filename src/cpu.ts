@@ -51,6 +51,6 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
  * @param opcode the instruction to execute
  * @param args the arguments to execute
  */
-function execute(this: ICpu, opcode: IOpcode, args?: IOpcodeArgs) {
+function execute(this: ICpu, opcode: IOpcode, args: IOpcodeArgs) {
   opcode.execute(this, args);
 }

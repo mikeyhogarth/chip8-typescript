@@ -2,8 +2,9 @@ import { ICpu } from "./cpu";
 
 type INNNArgs = { nnn: number };
 type IXYArgs = { x: number; y: number };
+type IXKKArgs = { x: number; kk: number };
 type INullArgs = undefined;
-export type IOpcodeArgs = INNNArgs | IXYArgs | INullArgs;
+export type IOpcodeArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
 export interface IOpcode {
   execute: (cpu: ICpu, args: IOpcodeArgs) => void;
@@ -15,18 +16,22 @@ enum OpcodeMneumonics {
   jmp = "jmp",
   ret = "ret",
   call = "call",
+  skipIf = "skipIf",
 }
 
 export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   // 0nnn - SYS addr
   sys: {
-    execute: () => null,
+    execute: (cpu) => {
+      cpu.pc += 2;
+    },
   },
 
   // 00E0 - CLS
   cls: {
     execute(cpu) {
       cpu.getInterface().clearDisplay();
+      cpu.pc += 2;
     },
   },
 
@@ -54,6 +59,13 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
       cpu.sp++;
       cpu.stack[cpu.sp] = cpu.pc;
       cpu.pc = nnn;
+    },
+  },
+
+  skipIf: {
+    execute(cpu, args) {
+      const { x, kk } = args as IXKKArgs;
+      cpu.pc += cpu.registers[x] === kk ? 4 : 2;
     },
   },
 };
