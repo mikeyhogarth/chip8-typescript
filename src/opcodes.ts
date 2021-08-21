@@ -21,6 +21,7 @@ enum OpcodeMneumonics {
   call = "call",
   skipIfEqual = "skipIfEqual",
   skipIfNotEqual = "skipIfNotEqual",
+  skipIfEqualRegisters = "skipIfEqualRegisters",
 }
 
 export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
@@ -83,6 +84,15 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 2 : 4;
+    },
+  },
+
+  // 5xy0 - SE Vx, Vy
+  skipIfEqualRegisters: {
+    manipulatesPC: true,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.pc += cpu.registers[x] === cpu.registers[y] ? 4 : 2;
     },
   },
 };

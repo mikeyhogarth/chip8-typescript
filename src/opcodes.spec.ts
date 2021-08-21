@@ -67,15 +67,15 @@ describe("call", () => {
 });
 
 // 3xkk - SE Vx, byte
-describe("skipIf", () => {
-  it("Skips next instruction if Vx = kk", () => {
+describe("skipIfEqual", () => {
+  it("Skips next instruction if Vx === kk", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should NOT skip
     cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
     expect(cpu.pc).toEqual(0x202);
 
-    // when register 0 is NOT set to KK, it should skip
+    // when register 0 is set to KK, it should skip
     cpu.registers[0] = kk;
     cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
@@ -83,8 +83,8 @@ describe("skipIf", () => {
 });
 
 // 4xkk - SNE Vx, byte
-describe("skipNotIf", () => {
-  it("Skips next instruction if Vx = kk", () => {
+describe("skipNotIfEqual", () => {
+  it("Skips next instruction if Vx !== kk", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should skip
@@ -94,6 +94,23 @@ describe("skipNotIf", () => {
     // when register 0 is set to KK, it should NOT skip
     cpu.registers[0] = kk;
     cpu.execute(opcodes.skipIfNotEqual, { x: 0, kk });
+    expect(cpu.pc).toEqual(0x206);
+  });
+});
+
+// 5xy0 - SE Vx, Vy
+describe("skipIfEqualRegisters", () => {
+  it("Skips next instruction if Vx === Vy", () => {
+    // when registers are equal, it should skip
+    cpu.registers[0] = 1;
+    cpu.registers[1] = 1;
+    cpu.execute(opcodes.skipIfEqualRegisters, { x: 0, y: 1 });
+    expect(cpu.pc).toEqual(0x204);
+
+    // when registers are NOT equal, it should skip
+    cpu.registers[0] = 1;
+    cpu.registers[1] = 2;
+    cpu.execute(opcodes.skipIfEqualRegisters, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x206);
   });
 });
