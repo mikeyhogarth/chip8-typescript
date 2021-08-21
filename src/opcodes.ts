@@ -7,7 +7,7 @@ type INullArgs = undefined;
 export type IOpcodeArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
 export interface IOpcode {
-  execute: (cpu: ICpu, args: IOpcodeArgs) => void;
+  execute: (cpu: ICpu, args?: IOpcodeArgs) => void;
   // Some opcodes mess around with the PC directly: we won't want to be
   // automatically incrementing it for these.
   manipulatesPC?: boolean;
@@ -29,7 +29,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   // 0nnn - SYS addr
   sys: {
     execute: (cpu) => {
-      return;
+      cpu.pc += 0x2;
     },
   },
 
@@ -37,6 +37,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   cls: {
     execute(cpu) {
       cpu.getIo().clearDisplay();
+      cpu.pc += 0x2;
     },
   },
 
@@ -102,6 +103,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;
+      cpu.pc += 0x2;
     },
   },
 };

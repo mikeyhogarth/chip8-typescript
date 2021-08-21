@@ -2,6 +2,8 @@ import { opcodes, IOpcode, IOpcodeArgs } from "./opcodes";
 import { IOInterface } from "./io";
 import { createMemoryIO } from "./io/memory.io";
 
+const MEMORY_START = 0x200;
+
 /*
  * Tech spec:
  * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
@@ -18,11 +20,17 @@ export interface ICpu {
   // the interchangable IO interface
   getIo: () => IOInterface;
 
-  execute: (opcode: IOpcode, args?: IOpcodeArgs) => void;
+  // ...
+  fetch: () => number;
+  load: (data: Uint8ClampedArray) => void;
 }
 
 /**
  * @returns a freshly initialised CHIP8 CPU
+ * Remember:
+ * 1 word = 16 bits = 4 hex digits
+ * 1 byte = 8 bits = 2 hex digits
+ * 1 nibble = 4 bits = 1 hex digit
  */
 export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
   return {
@@ -33,16 +41,25 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
     // 16 x 16 bit values for the stack
     stack: new Uint16Array(0x10),
     // 16 bit program counter (which starts at 0x200 due to chip8 interpreter taking up the first 512 bytes)
-    pc: 0x200,
+    pc: MEMORY_START,
     // 16 bit stack pointer
     sp: -1,
     // 16 bit delay and sound timers
     soundTimer: 0,
     delayTimer: 0,
-    execute,
+    // load data into memory
+    load,
+    // fetch
+    fetch,
     // the IO interface (in memory by default)
     getIo: () => io,
   };
+}
+
+function load(this: ICpu, data: Uint8ClampedArray) {
+  data.forEach((d, i) => {
+    this.memory[MEMORY_START + i] = d;
+  });
 }
 
 /**
@@ -51,7 +68,16 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
  * @param opcode the instruction to execute
  * @param args the arguments to execute
  */
-function execute(this: ICpu, opcode: IOpcode, args: IOpcodeArgs) {
-  opcode.execute(this, args);
-  if (!opcode.manipulatesPC) this.pc += 0x2; // increment by 2 because memory is 2 bytes long
+function fetch(this: ICpu): number {
+  // fetch the next opcode - each chunk of memory holds a byte (8 bits or 2 hex digits) but
+  // the opcodes take up 2 bytes. For this reason, we need to fetch two of them and glue
+  // them back together.
+
+  // first thing then - get the byte pointed to by the PC as well as the next byte.
+  const chunk1 = this.memory[this.pc];
+  const chunk2 = this.memory[this.pc + 1];
+
+  // To combine them, we're going to need to shift the first chunk 1 byte (8 bits) to the left
+  // and then add on the second chunk.
+  return (chunk1 << 8) + chunk2;
 }

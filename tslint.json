@@ -1,9 +1,12 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    // tslint will throw warnings about bitwise operations by default
+    // to "avoid typos" because this sort of thing is so "uncommon" in
+    // typescipt :D
+    "no-bitwise": false
+  },
+  "rulesDirectory": []
 }

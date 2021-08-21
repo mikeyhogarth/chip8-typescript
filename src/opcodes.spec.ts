@@ -11,7 +11,7 @@ beforeEach(() => {
 // 0nnn - SYS addr
 describe("sys", () => {
   it("does nothing except increment the PC", () => {
-    cpu.execute(opcodes.sys, { nnn: 0xf00 });
+    opcodes.sys.execute(cpu, { nnn: 0xf00 });
     expect(cpu.pc).toEqual(0x202);
   });
 });
@@ -20,7 +20,7 @@ describe("sys", () => {
 describe("cls", () => {
   it("Clears the display", () => {
     cpu = createCpu({ ...createMemoryIO(), clearDisplay: jest.fn() });
-    cpu.execute(opcodes.cls);
+    opcodes.cls.execute(cpu);
 
     // clearDisplay behavior already tested elsewhere.
     expect(cpu.getIo().clearDisplay).toHaveBeenCalled();
@@ -35,23 +35,23 @@ describe("ret", () => {
     cpu.stack[1] = 0x222;
     cpu.sp = 1;
 
-    cpu.execute(opcodes.ret);
+    opcodes.ret.execute(cpu);
     expect(cpu.pc).toEqual(0x222);
     expect(cpu.sp).toEqual(0);
 
-    cpu.execute(opcodes.ret);
+    opcodes.ret.execute(cpu);
     expect(cpu.pc).toEqual(0x111);
     expect(cpu.sp).toEqual(-1);
 
     // this would be a stack "underflow"
-    expect(() => cpu.execute(opcodes.ret)).toThrowError("Stack Underflow");
+    expect(() => opcodes.ret.execute(cpu)).toThrowError("Stack Underflow");
   });
 });
 
 // 1nnn - JP addr
 describe("jmp", () => {
   it("correctly sets PC to the passed in address", () => {
-    cpu.execute(opcodes.jmp, { nnn: 0xf00 });
+    opcodes.jmp.execute(cpu, { nnn: 0xf00 });
     expect(cpu.pc).toEqual(0xf00);
   });
 });
@@ -59,7 +59,7 @@ describe("jmp", () => {
 // 2nnn - CALL addr
 describe("call", () => {
   it("Increments the stack pointer, then puts the current PC on the top of the stack. The PC is then set to nnn.", () => {
-    cpu.execute(opcodes.call, { nnn: 0xf00 });
+    opcodes.call.execute(cpu, { nnn: 0xf00 });
     expect(cpu.sp).toEqual(0);
     expect(cpu.stack[cpu.sp]).toEqual(0x200);
     expect(cpu.pc).toEqual(0xf00);
@@ -72,12 +72,12 @@ describe("skipIfEqual", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should NOT skip
-    cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
+    opcodes.skipIfEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x202);
 
     // when register 0 is set to KK, it should skip
     cpu.registers[0] = kk;
-    cpu.execute(opcodes.skipIfEqual, { x: 0, kk });
+    opcodes.skipIfEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -88,12 +88,12 @@ describe("skipNotIfEqual", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should skip
-    cpu.execute(opcodes.skipIfNotEqual, { x: 0, kk });
+    opcodes.skipIfNotEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x204);
 
     // when register 0 is set to KK, it should NOT skip
     cpu.registers[0] = kk;
-    cpu.execute(opcodes.skipIfNotEqual, { x: 0, kk });
+    opcodes.skipIfNotEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -104,13 +104,13 @@ describe("skipIfEqualRegisters", () => {
     // when registers are equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 1;
-    cpu.execute(opcodes.skipIfEqualRegisters, { x: 0, y: 1 });
+    opcodes.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x204);
 
     // when registers are NOT equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 2;
-    cpu.execute(opcodes.skipIfEqualRegisters, { x: 0, y: 1 });
+    opcodes.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -119,7 +119,7 @@ describe("skipIfEqualRegisters", () => {
 describe("load", () => {
   it("puts the value kk into register Vx.", () => {
     const kk = 0xf0;
-    cpu.execute(opcodes.load, { x: 0, kk });
+    opcodes.load.execute(cpu, { x: 0, kk });
     expect(cpu.registers[0]).toEqual(kk);
     expect(cpu.pc).toEqual(0x202);
   });
