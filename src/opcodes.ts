@@ -8,6 +8,9 @@ export type IOpcodeArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
 export interface IOpcode {
   execute: (cpu: ICpu, args: IOpcodeArgs) => void;
+  // Some opcodes mess around with the PC directly: we won't want to be
+  // automatically incrementing it for these.
+  manipulatesPC?: boolean;
 }
 
 enum OpcodeMneumonics {
@@ -23,7 +26,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   // 0nnn - SYS addr
   sys: {
     execute: (cpu) => {
-      cpu.pc += 2;
+      return;
     },
   },
 
@@ -31,12 +34,12 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   cls: {
     execute(cpu) {
       cpu.getInterface().clearDisplay();
-      cpu.pc += 2;
     },
   },
 
   // 00EE - RET
   ret: {
+    manipulatesPC: true,
     execute(cpu) {
       if (cpu.sp <= -1) throw new Error("Stack Underflow");
       cpu.pc = cpu.stack[cpu.sp];
@@ -46,6 +49,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 1nnn - JP addr
   jmp: {
+    manipulatesPC: true,
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.pc = nnn;
@@ -54,6 +58,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
 
   // 2nnn - CALL addr
   call: {
+    manipulatesPC: true,
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.sp++;
@@ -63,6 +68,7 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   },
 
   skipIf: {
+    manipulatesPC: true,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 4 : 2;

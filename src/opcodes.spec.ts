@@ -10,8 +10,7 @@ beforeEach(() => {
 
 // 0nnn - SYS addr
 describe("sys", () => {
-  it("does nothing except increment the PC - this operand is unused by modern interpreters", () => {
-    const originalCpu = JSON.stringify(cpu);
+  it("does nothing except increment the PC", () => {
     cpu.execute(opcodes.sys, { nnn: 0xf00 });
     expect(cpu.pc).toEqual(0x202);
   });

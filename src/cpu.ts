@@ -53,4 +53,5 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
  */
 function execute(this: ICpu, opcode: IOpcode, args: IOpcodeArgs) {
   opcode.execute(this, args);
+  if (!opcode.manipulatesPC) this.pc += 0x2; // increment by 2 because memory is 2 bytes long
 }
