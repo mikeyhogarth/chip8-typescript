@@ -22,6 +22,7 @@ enum OpcodeMneumonics {
   skipIfEqual = "skipIfEqual",
   skipIfNotEqual = "skipIfNotEqual",
   skipIfEqualRegisters = "skipIfEqualRegisters",
+  load = "load",
 }
 
 export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
@@ -93,6 +94,14 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.pc += cpu.registers[x] === cpu.registers[y] ? 4 : 2;
+    },
+  },
+
+  // 6xkk - LD Vx, byte
+  load: {
+    execute(cpu, args) {
+      const { x, kk } = args as IXKKArgs;
+      cpu.registers[x] = kk;
     },
   },
 };

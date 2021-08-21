@@ -114,3 +114,13 @@ describe("skipIfEqualRegisters", () => {
     expect(cpu.pc).toEqual(0x206);
   });
 });
+
+// 6xkk - LD Vx, byte
+describe("load", () => {
+  it("puts the value kk into register Vx.", () => {
+    const kk = 0xf0;
+    cpu.execute(opcodes.load, { x: 0, kk });
+    expect(cpu.registers[0]).toEqual(kk);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
