@@ -14,6 +14,7 @@ enum OpcodeMneumonics {
   cls = "cls",
   jmp = "jmp",
   ret = "ret",
+  call = "call",
 }
 
 export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
@@ -41,7 +42,18 @@ export const opcodes: { [key in OpcodeMneumonics]: IOpcode } = {
   // 1nnn - JP addr
   jmp: {
     execute(cpu, args) {
-      cpu.pc = (args as INNNArgs).nnn;
+      const { nnn } = args as INNNArgs;
+      cpu.pc = nnn;
+    },
+  },
+
+  // 2nnn - CALL addr
+  call: {
+    execute(cpu, args) {
+      const { nnn } = args as INNNArgs;
+      cpu.sp++;
+      cpu.stack[cpu.sp] = cpu.pc;
+      cpu.pc = nnn;
     },
   },
 };

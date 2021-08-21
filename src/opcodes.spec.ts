@@ -55,3 +55,13 @@ describe("jmp", () => {
     expect(cpu.pc).toEqual(0xf00);
   });
 });
+
+// 2nnn - CALL addr
+describe("call", () => {
+  it("Increments the stack pointer, then puts the current PC on the top of the stack. The PC is then set to nnn.", () => {
+    cpu.execute(opcodes.call, { nnn: 0xf00 });
+    expect(cpu.sp).toEqual(0);
+    expect(cpu.stack[cpu.sp]).toEqual(0x200);
+    expect(cpu.pc).toEqual(0xf00);
+  });
+});
