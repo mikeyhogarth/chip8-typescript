@@ -25,6 +25,26 @@ export enum OpcodeMneumonic {
   load = "load",
 }
 
+/**
+ * Pass in a 16 bit bytecode and this function returns the appropriate matching opcode.
+ * @param byteCode a 16-bit bytecode that should match to one of the opcodes
+ * @returns the matched opcode
+ */
+export function findByBytecode(byteCode: number): IOpcode {
+  const opcodeValues = Object.values(opcodes);
+  const retVal =
+    // is it a literal? In which case return that.
+    opcodeValues.find((o) => o.pattern === byteCode) ||
+    // otherwise resort to applying bitmasks to discover correct opcode
+    opcodeValues.find((o) => (o.mask & byteCode) === o.pattern);
+
+  if (retVal) return retVal;
+  else throw new Error("Opcode not matched");
+}
+
+/**
+ * list of opcodes
+ */
 export const opcodes: { [key in OpcodeMneumonic]: IOpcode } = {
   // 0nnn - SYS addr
   sys: {
