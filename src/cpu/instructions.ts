@@ -1,4 +1,4 @@
-import { ICpu } from "./cpu";
+import { ICpu } from "../cpu";
 
 type INNNArgs = { nnn: number };
 type IXYArgs = { x: number; y: number };

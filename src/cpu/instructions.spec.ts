@@ -1,6 +1,6 @@
-import { instructions, findByBytecode, Instruction } from "./opcodes";
-import { createCpu, ICpu } from "./cpu";
-import { createMemoryIO } from "./io/memory.io";
+import { instructions, findByBytecode, Instruction } from "./instructions";
+import { createCpu, ICpu } from "../cpu";
+import { createMemoryIO } from "../io/memory.io";
 
 let cpu: ICpu;
 
