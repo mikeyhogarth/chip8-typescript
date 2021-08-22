@@ -39,8 +39,11 @@ export function findByBytecode(opcode: number): Instruction {
     // otherwise resort to applying bitmasks to discover correct instruction represented
     opcodeValues.find((o) => (o.mask & opcode) === o.pattern);
 
-  if (retVal) return retVal;
-  else throw new Error("Opcode not matched");
+  if (retVal) {
+    return retVal;
+  } else {
+    throw new Error("Opcode not matched");
+  }
 }
 
 /**
@@ -71,7 +74,9 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     pattern: 0x00ee,
     mask: 0xffff,
     execute(cpu) {
-      if (cpu.sp <= -1) throw new Error("Stack Underflow");
+      if (cpu.sp <= -1) {
+        throw new Error("Stack Underflow");
+      }
       cpu.pc = cpu.stack[cpu.sp];
       cpu.sp--;
     },
