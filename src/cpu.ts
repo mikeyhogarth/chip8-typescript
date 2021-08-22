@@ -1,4 +1,4 @@
-import { IOpcodeArgs, OpcodeMneumonic, opcodes } from "./opcodes";
+import { InstructionArgs, InstructionMneumonic, instructions } from "./opcodes";
 import { IOInterface } from "./io";
 import { createMemoryIO } from "./io/memory.io";
 
@@ -9,6 +9,7 @@ const MEMORY_START = 0x200;
  * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
  */
 export interface ICpu {
+  // CPU components
   stack: Uint16Array;
   memory: Uint8ClampedArray;
   registers: Uint8ClampedArray;
@@ -17,17 +18,17 @@ export interface ICpu {
   delayTimer: number;
   soundTimer: number;
 
-  // load stuff into memory
+  // load data into memory
   load: (data: Uint8ClampedArray) => void;
 
-  // the interchangable IO interface
+  // Retrieve the IO interface
   getIo: () => IOInterface;
 
   // FDE cycle
   fetch: () => number;
   decode: (opcode: number) => {
-    opcode: OpcodeMneumonic;
-    args: IOpcodeArgs;
+    instruction: InstructionMneumonic;
+    args: InstructionArgs;
   };
   execute: () => void;
 }
@@ -66,14 +67,19 @@ export function createCpu(io: IOInterface = createMemoryIO()): ICpu {
   };
 }
 
-function load(this: ICpu, data: Uint8ClampedArray) {
+/**
+ *
+ * @param this the CPU loading the data
+ * @param data the data to load
+ */
+function load(this: ICpu, data: Uint8ClampedArray): void {
   data.forEach((d, i) => {
     this.memory[MEMORY_START + i] = d;
   });
 }
 
 /**
- *
+ * the FETCH part of the FDE cycle
  * @param this the CPU executing the instruction
  * @param opcode the instruction to execute
  * @param args the arguments to execute
@@ -93,12 +99,16 @@ function fetch(this: ICpu): number {
 }
 
 /**
- *
- * @param opcode
+ * the DECODE part of the FDE cycle
+ * @param opcode the opcode to decode
+ * @returns an object identifying the instruction that fired and that instruction's arguments
  */
-function decode(opcode: number): {
-  opcode: OpcodeMneumonic;
-  args: IOpcodeArgs;
+function decode(
+  this: ICpu,
+  opcode: number
+): {
+  instruction: InstructionMneumonic;
+  args: InstructionArgs;
 } {
   // An opcode in chip8 is represented by a "word" (a.k.a 16 bits, 2 bytes or 4 hex digits)
   // the way chip8 works is that there are "patterns" within the hex codes. For example,
@@ -108,10 +118,13 @@ function decode(opcode: number): {
   //
   // So we therefore need a way to;
   // 1- detect which opcode "fired"
-  // 2- figure out the arguments
+  // 2- figure out the arguments for that opcode
   throw new Error("Not Implemented");
 }
 
-function execute() {
+/**
+ * The EXECUTE part of the FDE cycle
+ */
+function execute(this: ICpu) {
   throw new Error("Not Implemented");
 }

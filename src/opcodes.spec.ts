@@ -1,4 +1,4 @@
-import { opcodes, findByBytecode, IOpcode } from "./opcodes";
+import { instructions, findByBytecode, Instruction } from "./opcodes";
 import { createCpu, ICpu } from "./cpu";
 import { createMemoryIO } from "./io/memory.io";
 
@@ -11,7 +11,7 @@ beforeEach(() => {
 // 0nnn - SYS addr
 describe("sys", () => {
   it("does nothing except increment the PC", () => {
-    opcodes.sys.execute(cpu, { nnn: 0xf00 });
+    instructions.sys.execute(cpu, { nnn: 0xf00 });
     expect(cpu.pc).toEqual(0x202);
   });
 });
@@ -20,7 +20,7 @@ describe("sys", () => {
 describe("cls", () => {
   it("Clears the display", () => {
     cpu = createCpu({ ...createMemoryIO(), clearDisplay: jest.fn() });
-    opcodes.cls.execute(cpu);
+    instructions.cls.execute(cpu);
 
     // clearDisplay behavior already tested elsewhere.
     expect(cpu.getIo().clearDisplay).toHaveBeenCalled();
@@ -35,23 +35,23 @@ describe("ret", () => {
     cpu.stack[1] = 0x222;
     cpu.sp = 1;
 
-    opcodes.ret.execute(cpu);
+    instructions.ret.execute(cpu);
     expect(cpu.pc).toEqual(0x222);
     expect(cpu.sp).toEqual(0);
 
-    opcodes.ret.execute(cpu);
+    instructions.ret.execute(cpu);
     expect(cpu.pc).toEqual(0x111);
     expect(cpu.sp).toEqual(-1);
 
     // this would be a stack "underflow"
-    expect(() => opcodes.ret.execute(cpu)).toThrowError("Stack Underflow");
+    expect(() => instructions.ret.execute(cpu)).toThrowError("Stack Underflow");
   });
 });
 
 // 1nnn - JP addr
 describe("jmp", () => {
   it("correctly sets PC to the passed in address", () => {
-    opcodes.jmp.execute(cpu, { nnn: 0xf00 });
+    instructions.jmp.execute(cpu, { nnn: 0xf00 });
     expect(cpu.pc).toEqual(0xf00);
   });
 });
@@ -59,7 +59,7 @@ describe("jmp", () => {
 // 2nnn - CALL addr
 describe("call", () => {
   it("Increments the stack pointer, then puts the current PC on the top of the stack. The PC is then set to nnn.", () => {
-    opcodes.call.execute(cpu, { nnn: 0xf00 });
+    instructions.call.execute(cpu, { nnn: 0xf00 });
     expect(cpu.sp).toEqual(0);
     expect(cpu.stack[cpu.sp]).toEqual(0x200);
     expect(cpu.pc).toEqual(0xf00);
@@ -72,12 +72,12 @@ describe("skipIfEqual", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should NOT skip
-    opcodes.skipIfEqual.execute(cpu, { x: 0, kk });
+    instructions.skipIfEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x202);
 
     // when register 0 is set to KK, it should skip
     cpu.registers[0] = kk;
-    opcodes.skipIfEqual.execute(cpu, { x: 0, kk });
+    instructions.skipIfEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -88,12 +88,12 @@ describe("skipNotIfEqual", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should skip
-    opcodes.skipIfNotEqual.execute(cpu, { x: 0, kk });
+    instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x204);
 
     // when register 0 is set to KK, it should NOT skip
     cpu.registers[0] = kk;
-    opcodes.skipIfNotEqual.execute(cpu, { x: 0, kk });
+    instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -104,13 +104,13 @@ describe("skipIfEqualRegisters", () => {
     // when registers are equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 1;
-    opcodes.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
+    instructions.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x204);
 
     // when registers are NOT equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 2;
-    opcodes.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
+    instructions.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -119,29 +119,29 @@ describe("skipIfEqualRegisters", () => {
 describe("load", () => {
   it("puts the value kk into register Vx.", () => {
     const kk = 0xf0;
-    opcodes.load.execute(cpu, { x: 0, kk });
+    instructions.load.execute(cpu, { x: 0, kk });
     expect(cpu.registers[0]).toEqual(kk);
     expect(cpu.pc).toEqual(0x202);
   });
 });
 
 describe("findByBytecode", () => {
-  const opcodeTestPairs: [number, IOpcode][] = [
-    [0x0123, opcodes.sys],
-    [0x00e0, opcodes.cls],
-    [0x00ee, opcodes.ret],
-    [0x1123, opcodes.jmp],
-    [0x2123, opcodes.call],
-    [0x3123, opcodes.skipIfEqual],
-    [0x4123, opcodes.skipIfNotEqual],
-    [0x5120, opcodes.skipIfEqualRegisters],
-    [0x6123, opcodes.load],
+  const opcodeTestPairs: [number, Instruction][] = [
+    [0x0123, instructions.sys],
+    [0x00e0, instructions.cls],
+    [0x00ee, instructions.ret],
+    [0x1123, instructions.jmp],
+    [0x2123, instructions.call],
+    [0x3123, instructions.skipIfEqual],
+    [0x4123, instructions.skipIfNotEqual],
+    [0x5120, instructions.skipIfEqualRegisters],
+    [0x6123, instructions.load],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
   it("tests each opcode at least once", () => {
     const testedOpcodes = new Set(opcodeTestPairs.map((p) => p[1]));
-    expect(testedOpcodes.size).toEqual(Object.values(opcodes).length);
+    expect(testedOpcodes.size).toEqual(Object.values(instructions).length);
   });
 
   it("throws an error if no opcode is matched", () => {

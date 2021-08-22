@@ -1,5 +1,5 @@
 import { createCpu, ICpu } from "./cpu";
-import { OpcodeMneumonic } from "./opcodes";
+import { InstructionMneumonic } from "./opcodes";
 
 let cpu: ICpu;
 beforeEach(() => {

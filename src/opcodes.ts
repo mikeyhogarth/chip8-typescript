@@ -4,16 +4,16 @@ type INNNArgs = { nnn: number };
 type IXYArgs = { x: number; y: number };
 type IXKKArgs = { x: number; kk: number };
 type INullArgs = undefined;
-export type IOpcodeArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
+export type InstructionArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
-export interface IOpcode {
-  execute: (cpu: ICpu, args?: IOpcodeArgs) => void;
+export interface Instruction {
+  execute: (cpu: ICpu, args?: InstructionArgs) => void;
   // Each opcode has a "pattern" and a "mask" that will reveal that pattern.
   pattern: number;
   mask: number;
 }
 
-export enum OpcodeMneumonic {
+export enum InstructionMneumonic {
   sys = "sys",
   cls = "cls",
   jmp = "jmp",
@@ -26,26 +26,27 @@ export enum OpcodeMneumonic {
 }
 
 /**
- * Pass in a 16 bit bytecode and this function returns the appropriate matching opcode.
- * @param byteCode a 16-bit bytecode that should match to one of the opcodes
- * @returns the matched opcode
+ * Reterieve instruction based on opcode.
+ * @param byteCode a 16-bit opcode that should match to one of the instructions
+ * @returns the matched instruction
+ * @throws error if no instruction matches passed-in opcode
  */
-export function findByBytecode(byteCode: number): IOpcode {
-  const opcodeValues = Object.values(opcodes);
+export function findByBytecode(opcode: number): Instruction {
+  const opcodeValues = Object.values(instructions);
   const retVal =
-    // is it a literal? In which case return that.
-    opcodeValues.find((o) => o.pattern === byteCode) ||
-    // otherwise resort to applying bitmasks to discover correct opcode
-    opcodeValues.find((o) => (o.mask & byteCode) === o.pattern);
+    // some opcodes are literals - in which case return those before pattern matching.
+    opcodeValues.find((o) => o.pattern === opcode) ||
+    // otherwise resort to applying bitmasks to discover correct instruction represented
+    opcodeValues.find((o) => (o.mask & opcode) === o.pattern);
 
   if (retVal) return retVal;
   else throw new Error("Opcode not matched");
 }
 
 /**
- * list of opcodes
+ * list of instructions
  */
-export const opcodes: { [key in OpcodeMneumonic]: IOpcode } = {
+export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   // 0nnn - SYS addr
   sys: {
     pattern: 0x0000,
@@ -58,7 +59,7 @@ export const opcodes: { [key in OpcodeMneumonic]: IOpcode } = {
   // 00E0 - CLS
   cls: {
     pattern: 0x00e0,
-    mask: 0x00f0,
+    mask: 0xffff,
     execute(cpu) {
       cpu.getIo().clearDisplay();
       cpu.pc += 0x2;
@@ -68,7 +69,7 @@ export const opcodes: { [key in OpcodeMneumonic]: IOpcode } = {
   // 00EE - RET
   ret: {
     pattern: 0x00ee,
-    mask: 0x00ff,
+    mask: 0xffff,
     execute(cpu) {
       if (cpu.sp <= -1) throw new Error("Stack Underflow");
       cpu.pc = cpu.stack[cpu.sp];
