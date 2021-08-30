@@ -75,8 +75,7 @@ class Cpu implements ICpu {
   /**
    * the FETCH part of the FDE cycle
    * @param this the CPU executing the instruction
-   * @param opcode the instruction to execute
-   * @param args the arguments to execute
+   * @returns the fetched opcode (which will be 2 bytes long)
    */
   fetch(this: ICpu): number {
     // fetch the next opcode - each chunk of memory holds a byte (8 bits or 2 hex digits) but
@@ -94,7 +93,7 @@ class Cpu implements ICpu {
 
   /**
    * the DECODE part of the FDE cycle
-   * @param opcode the opcode to decode
+   * @param opcode the opcode to decode (2 bytes)
    * @returns an object identifying the instruction that fired and that instruction's arguments
    */
   decode(

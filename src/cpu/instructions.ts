@@ -23,6 +23,8 @@ export enum InstructionMneumonic {
   skipIfNotEqual = "skipIfNotEqual",
   skipIfEqualRegisters = "skipIfEqualRegisters",
   load = "load",
+  add = "add",
+  loadReg = "loadReg",
 }
 
 /**
@@ -141,6 +143,28 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;
+      cpu.pc += 0x2;
+    },
+  },
+
+  // 7xkk - ADD Vx, byte
+  add: {
+    pattern: 0x7000,
+    mask: 0xf000,
+    execute(cpu, args) {
+      const { x, kk } = args as IXKKArgs;
+      cpu.registers[x] = cpu.registers[x] + kk;
+      cpu.pc += 0x2;
+    },
+  },
+
+  // 8xy0 - LD Vx, Vy
+  loadReg: {
+    pattern: 0x8000,
+    mask: 0xf00f,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.registers[x] = cpu.registers[y];
       cpu.pc += 0x2;
     },
   },

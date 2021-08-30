@@ -125,6 +125,27 @@ describe("load", () => {
   });
 });
 
+// 7xkk - ADD Vx, byte
+describe("add", () => {
+  it("Adds the value kk to the value of register Vx, then stores the result in Vx.", () => {
+    const kk = 0x01;
+    cpu.registers[0] = 5;
+    instructions.add.execute(cpu, { x: 0, kk });
+    expect(cpu.registers[0]).toEqual(6);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// 8xy0 - LD Vx, Vy
+describe("add", () => {
+  it("Stores the value of register Vy in register Vx.", () => {
+    cpu.registers[1] = 5;
+    instructions.loadReg.execute(cpu, { x: 0, y: 1 });
+    expect(cpu.registers[0]).toEqual(5);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
 describe("findByBytecode", () => {
   const opcodeTestPairs: [number, Instruction][] = [
     [0x0123, instructions.sys],
@@ -136,6 +157,8 @@ describe("findByBytecode", () => {
     [0x4123, instructions.skipIfNotEqual],
     [0x5120, instructions.skipIfEqualRegisters],
     [0x6123, instructions.load],
+    [0x7123, instructions.add],
+    [0x8120, instructions.loadReg],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
