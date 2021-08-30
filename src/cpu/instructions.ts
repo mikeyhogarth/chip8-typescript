@@ -52,7 +52,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     mask: 0xffff,
     decodeArgs: nullDecoder,
     execute(cpu) {
-      cpu.getIo().clearDisplay();
+      cpu.io.clearDisplay();
       cpu.pc += 0x2;
     },
   },

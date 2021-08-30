@@ -1,5 +1,5 @@
 import { InstructionArgs, InstructionMneumonic } from "./cpu/instructions";
-import { findByBytecode } from "./cpu/decoders";
+import { findByBytecode, decode } from "./cpu/decoders";
 import { IOInterface } from "./io";
 import { createMemoryIO } from "./io/memory.io";
 
@@ -24,8 +24,8 @@ export interface ICpu {
   // load data into memory
   load: (data: Uint8ClampedArray) => void;
 
-  // Retrieve the IO interface
-  getIo: () => IOInterface;
+  // The IO interface
+  io: IOInterface;
 
   // FDE cycle
   fetch: () => number;
@@ -38,7 +38,7 @@ export interface ICpu {
 
 class Cpu implements ICpu {
   constructor(
-    private io: IOInterface = createMemoryIO(),
+    public io: IOInterface = createMemoryIO(),
     // 4096 8-bit data registers
     public memory = new Uint8ClampedArray(0x1000),
     // 16 8-bit data registers named V0 to VF
@@ -65,12 +65,8 @@ class Cpu implements ICpu {
     });
   }
 
-  /**
-   *
-   * @returns
-   */
-  getIo() {
-    return this.io;
+  decode(opcode: number) {
+    return decode(opcode);
   }
 
   /**
@@ -90,30 +86,6 @@ class Cpu implements ICpu {
     // To combine them, we're going to need to shift the first chunk 1 byte (8 bits) to the left
     // and then add on the second chunk.
     return (chunk1 << 8) + chunk2;
-  }
-
-  /**
-   * the DECODE part of the FDE cycle
-   * @param opcode the opcode to decode (2 bytes)
-   * @returns an object identifying the instruction that fired and that instruction's arguments
-   */
-  decode(
-    this: ICpu,
-    opcode: number
-  ): {
-    instruction: InstructionMneumonic;
-    args: InstructionArgs;
-  } {
-    // An opcode in chip8 is represented by a "word" (a.k.a 16 bits, 2 bytes or 4 hex digits)
-    // the way chip8 works is that there are "patterns" within the hex codes. For example,
-    // the opcode for loading a value into a register is 6xkk, where the "x" is the register number
-    // and the "kk" is the value (two hexes, so a byte) to load into it - meaning that an opcode
-    // of "6E10" would load the value "10" into register "E".
-    const instructionMetadata = findByBytecode(opcode);
-    return {
-      instruction: instructionMetadata.id,
-      args: instructionMetadata.decodeArgs(opcode),
-    };
   }
 
   /**

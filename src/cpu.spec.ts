@@ -1,4 +1,5 @@
 import { createCpu, ICpu } from "./cpu";
+import * as decoders from "./cpu/decoders";
 
 let cpu: ICpu;
 beforeEach(() => {
@@ -38,29 +39,12 @@ describe("fetch", () => {
   });
 });
 
-// Feeling like we should split the "decode" part off into its own file.
 describe("decode", () => {
-  // we're going to test each opcode works
-  it("correctly decodes 0nnn", () => {
-    expect(cpu.decode(0x0123)).toEqual({
-      instruction: "sys",
-      args: { nnn: 0x123 },
-    });
+  it("Offloads the work to the external 'decode' function", () => {
+    const spy = jest.spyOn(decoders, "decode");
+    cpu.decode(0x00e0);
+    expect(spy).toHaveBeenCalledWith(0x00e0);
+    expect(spy).toHaveBeenCalledTimes(1);
+    spy.mockRestore();
   });
-
-  it("correctly decodes 00e0", () => {
-    expect(cpu.decode(0x00e0)).toEqual({
-      instruction: "cls",
-      args: {},
-    });
-  });
-
-  it("correctly decodes 1nnn", () => {
-    expect(cpu.decode(0x1123)).toEqual({
-      instruction: "jmp",
-      args: { nnn: 0x123 },
-    });
-  });
-
-  // TODO - FINISH THESE (got interrupted)
 });

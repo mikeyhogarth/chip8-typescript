@@ -1,5 +1,32 @@
-import { nnnDecoder, nullDecoder, findByBytecode } from "./decoders";
+import { decode, nnnDecoder, nullDecoder, findByBytecode } from "./decoders";
 import { Instruction, instructions } from "./instructions";
+
+// Feeling like we should split the "decode" part off into its own file.
+describe("decode", () => {
+  // we're going to test each opcode works
+  it("correctly decodes 0nnn", () => {
+    expect(decode(0x0123)).toEqual({
+      instruction: "sys",
+      args: { nnn: 0x123 },
+    });
+  });
+
+  it("correctly decodes 00e0", () => {
+    expect(decode(0x00e0)).toEqual({
+      instruction: "cls",
+      args: {},
+    });
+  });
+
+  it("correctly decodes 1nnn", () => {
+    expect(decode(0x1123)).toEqual({
+      instruction: "jmp",
+      args: { nnn: 0x123 },
+    });
+  });
+
+  // TODO - FINISH THESE (got interrupted)
+});
 
 describe("nullDecoder", () => {
   it("returns zero args", () => {
