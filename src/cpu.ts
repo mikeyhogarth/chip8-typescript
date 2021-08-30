@@ -22,7 +22,7 @@ export interface ICpu {
   soundTimer: number;
 
   // load data into memory
-  load: (data: Uint8ClampedArray) => void;
+  load: (data: Buffer) => void;
 
   // The IO interface
   io: IOInterface;
@@ -59,7 +59,7 @@ class Cpu implements ICpu {
    * @param this the CPU loading the data
    * @param data the data to load
    */
-  load(this: ICpu, data: Uint8ClampedArray): void {
+  load(data: Buffer): void {
     data.forEach((d, i) => {
       this.memory[MEMORY_START + i] = d;
     });
@@ -74,7 +74,7 @@ class Cpu implements ICpu {
    * @param this the CPU executing the instruction
    * @returns the fetched opcode (which will be 2 bytes long)
    */
-  fetch(this: ICpu): number {
+  fetch(): number {
     // fetch the next opcode - each chunk of memory holds a byte (8 bits or 2 hex digits) but
     // the opcodes take up 2 bytes. For this reason, we need to fetch two of them and glue
     // them back together.

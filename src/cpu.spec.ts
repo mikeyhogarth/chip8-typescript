@@ -1,5 +1,7 @@
 import { createCpu, ICpu } from "./cpu";
 import * as decoders from "./cpu/decoders";
+import * as fs from "fs";
+import * as path from "path";
 
 let cpu: ICpu;
 beforeEach(() => {
@@ -20,7 +22,7 @@ describe("createCpu", () => {
 
 describe("load", () => {
   it("loads the given data into memory", () => {
-    cpu.load(new Uint8ClampedArray([0x60, 0xaa, 0x60, 0xbb]));
+    cpu.load(Buffer.from([0x60, 0xaa, 0x60, 0xbb]));
 
     // Those chunks above should have been loaded into 4 memory slots...
     expect(cpu.memory[0x200]).toEqual(0x60);
@@ -28,11 +30,24 @@ describe("load", () => {
     expect(cpu.memory[0x202]).toEqual(0x60);
     expect(cpu.memory[0x203]).toEqual(0xbb);
   });
+
+  it("Reads from a file", () => {
+    const file = fs.readFileSync(path.join(__dirname, "../roms/test.ch8"));
+    cpu.load(file);
+
+    // this file should set the values in memory to 60 01 70 01 81 00
+    expect(cpu.memory[0x200]).toEqual(0x60);
+    expect(cpu.memory[0x201]).toEqual(0x01);
+    expect(cpu.memory[0x202]).toEqual(0x70);
+    expect(cpu.memory[0x203]).toEqual(0x01);
+    expect(cpu.memory[0x204]).toEqual(0x81);
+    expect(cpu.memory[0x205]).toEqual(0x00);
+  });
 });
 
 describe("fetch", () => {
   it("Fetches the word currently being pointed to by the PC", () => {
-    cpu.load(new Uint8ClampedArray([0x60, 0xaa]));
+    cpu.load(Buffer.from([0x60, 0xaa]));
 
     // fetching should return the whole word representing the opcode
     expect(cpu.fetch()).toEqual(0x60aa);
