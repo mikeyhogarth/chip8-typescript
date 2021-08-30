@@ -1,8 +1,5 @@
-import {
-  InstructionArgs,
-  InstructionMneumonic,
-  findByBytecode,
-} from "./cpu/instructions";
+import { InstructionArgs, InstructionMneumonic } from "./cpu/instructions";
+import { findByBytecode } from "./cpu/decoders";
 import { IOInterface } from "./io";
 import { createMemoryIO } from "./io/memory.io";
 

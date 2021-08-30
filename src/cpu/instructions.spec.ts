@@ -1,4 +1,4 @@
-import { instructions, findByBytecode, Instruction } from "./instructions";
+import { instructions } from "./instructions";
 import { createCpu, ICpu } from "../cpu";
 import { createMemoryIO } from "../io/memory.io";
 
@@ -143,38 +143,5 @@ describe("add", () => {
     instructions.loadReg.execute(cpu, { x: 0, y: 1 });
     expect(cpu.registers[0]).toEqual(5);
     expect(cpu.pc).toEqual(0x202);
-  });
-});
-
-describe("findByBytecode", () => {
-  const opcodeTestPairs: [number, Instruction][] = [
-    [0x0123, instructions.sys],
-    [0x00e0, instructions.cls],
-    [0x00ee, instructions.ret],
-    [0x1123, instructions.jmp],
-    [0x2123, instructions.call],
-    [0x3123, instructions.skipIfEqual],
-    [0x4123, instructions.skipIfNotEqual],
-    [0x5120, instructions.skipIfEqualRegisters],
-    [0x6123, instructions.load],
-    [0x7123, instructions.add],
-    [0x8120, instructions.loadReg],
-  ];
-
-  // yes, this is a test FOR the tests to make sure we're fully covered
-  it("tests each opcode at least once", () => {
-    const testedOpcodes = new Set(opcodeTestPairs.map((p) => p[1]));
-    expect(testedOpcodes.size).toEqual(Object.values(instructions).length);
-  });
-
-  it("throws an error if no opcode is matched", () => {
-    expect(() => findByBytecode(0x5123)).toThrowError("Opcode not matched");
-  });
-
-  // test each of the cases defined above
-  opcodeTestPairs.forEach(([bytecode, mneumonic]) => {
-    it("matches", () => {
-      expect(findByBytecode(bytecode)).toEqual(mneumonic);
-    });
   });
 });
