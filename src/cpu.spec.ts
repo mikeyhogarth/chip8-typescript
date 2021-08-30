@@ -38,15 +38,29 @@ describe("fetch", () => {
   });
 });
 
-describe("fetch", () => {
-  it("Fetches the word currently being pointed to by the PC", () => {
-    cpu.load(new Uint8ClampedArray([0x60, 0xaa]));
-
-    // fetching should return the whole word representing the opcode
-    expect(cpu.fetch()).toEqual(0x60aa);
-  });
-});
-
+// Feeling like we should split the "decode" part off into its own file.
 describe("decode", () => {
   // we're going to test each opcode works
+  it("correctly decodes 0nnn", () => {
+    expect(cpu.decode(0x0123)).toEqual({
+      instruction: "sys",
+      args: { nnn: 0x123 },
+    });
+  });
+
+  it("correctly decodes 00e0", () => {
+    expect(cpu.decode(0x00e0)).toEqual({
+      instruction: "cls",
+      args: {},
+    });
+  });
+
+  it("correctly decodes 1nnn", () => {
+    expect(cpu.decode(0x1123)).toEqual({
+      instruction: "jmp",
+      args: { nnn: 0x123 },
+    });
+  });
+
+  // TODO - FINISH THESE (got interrupted)
 });

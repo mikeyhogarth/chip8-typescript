@@ -1,4 +1,8 @@
-import { InstructionArgs, InstructionMneumonic } from "./cpu/instructions";
+import {
+  InstructionArgs,
+  InstructionMneumonic,
+  findByBytecode,
+} from "./cpu/instructions";
 import { IOInterface } from "./io";
 import { createMemoryIO } from "./io/memory.io";
 
@@ -108,11 +112,11 @@ class Cpu implements ICpu {
     // the opcode for loading a value into a register is 6xkk, where the "x" is the register number
     // and the "kk" is the value (two hexes, so a byte) to load into it - meaning that an opcode
     // of "6E10" would load the value "10" into register "E".
-    //
-    // So we therefore need a way to;
-    // 1- detect which opcode "fired"
-    // 2- figure out the arguments for that opcode
-    throw new Error("Not Implemented");
+    const instructionMetadata = findByBytecode(opcode);
+    return {
+      instruction: instructionMetadata.id,
+      args: instructionMetadata.decodeArgs(opcode),
+    };
   }
 
   /**
