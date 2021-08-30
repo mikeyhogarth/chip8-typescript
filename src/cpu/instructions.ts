@@ -1,5 +1,5 @@
 import { ICpu } from "../cpu";
-import { nnnDecoder, nullDecoder } from "./decoders";
+import { xkkDecoder, nnnDecoder, nullDecoder, xyDecoder } from "./decoders";
 
 type INNNArgs = { nnn: number };
 type IXYArgs = { x: number; y: number };
@@ -89,9 +89,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.call,
     pattern: 0x2000,
     mask: 0xf000,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: nnnDecoder,
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.sp++;
@@ -105,9 +103,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.skipIfEqual,
     pattern: 0x3000,
     mask: 0xf000,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xkkDecoder,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 4 : 2;
@@ -119,9 +115,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.skipIfNotEqual,
     pattern: 0x4000,
     mask: 0xf000,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xkkDecoder,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.pc += cpu.registers[x] === kk ? 2 : 4;
@@ -133,9 +127,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.skipIfEqualRegisters,
     pattern: 0x5000,
     mask: 0xf00f,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.pc += cpu.registers[x] === cpu.registers[y] ? 4 : 2;
@@ -147,9 +139,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.load,
     pattern: 0x6000,
     mask: 0xf000,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xkkDecoder,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;
@@ -162,9 +152,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.add,
     pattern: 0x7000,
     mask: 0xf000,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xkkDecoder,
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = cpu.registers[x] + kk;
@@ -177,9 +165,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     id: InstructionMneumonic.loadReg,
     pattern: 0x8000,
     mask: 0xf00f,
-    decodeArgs: (opcode: number) => {
-      throw new Error("Not Implemented");
-    },
+    decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.registers[x] = cpu.registers[y];
