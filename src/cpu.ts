@@ -1,5 +1,6 @@
 import { decode } from "./cpu/instruction-utils";
 import { createMemoryIO } from "./io/memory.io";
+import { InstructionMneumonic } from "./cpu/mneumonics";
 
 // The first 0x1FF bytes of memory are reserved for the CHIP8 interpreter, so all
 // CHIP8 programs start at 0x200.
@@ -34,10 +35,6 @@ class Cpu implements ICpu {
     });
   }
 
-  decode(opcode: number) {
-    return decode(opcode);
-  }
-
   /**
    * the FETCH part of the FDE cycle
    * @param this the CPU executing the instruction
@@ -57,11 +54,29 @@ class Cpu implements ICpu {
     return (chunk1 << 8) + chunk2;
   }
 
+  decode(opcode: number) {
+    return decode(opcode);
+  }
+
   /**
    * The EXECUTE part of the FDE cycle
    */
-  execute(this: ICpu) {
-    throw new Error("Not Implemented");
+  execute(instruction: Instruction, args: InstructionArgs) {
+    instruction.execute(this, args);
+  }
+
+  // run through one step of a CPU fetch-decode-execute cycle.
+  step() {
+    const opcode = this.fetch();
+    const { instruction, args } = decode(opcode);
+    this.execute(instruction, args);
+  }
+
+  play() {
+    return new Error("Not Implemented");
+  }
+  pause() {
+    return new Error("Not Implemented");
   }
 }
 

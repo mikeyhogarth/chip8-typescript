@@ -7,7 +7,7 @@ import { InstructionMneumonic } from "./mneumonics";
  * @returns an object identifying the instruction that fired and that instruction's arguments
  */
 export function decode(opcode: number): {
-  instruction: InstructionMneumonic;
+  instruction: Instruction;
   args: InstructionArgs;
 } {
   // An opcode in chip8 is represented by a "word" (a.k.a 16 bits, 2 bytes or 4 hex digits)
@@ -17,7 +17,7 @@ export function decode(opcode: number): {
   // of "6E10" would load the value "10" into register "E".
   const instructionMetadata = findByBytecode(opcode);
   return {
-    instruction: instructionMetadata.id,
+    instruction: instructionMetadata,
     args: instructionMetadata.decodeArgs(opcode),
   };
 }

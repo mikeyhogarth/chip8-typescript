@@ -2,6 +2,7 @@ import { createCpu } from "./cpu";
 import * as utils from "./cpu/instruction-utils";
 import * as fs from "fs";
 import * as path from "path";
+import { instructions } from "./cpu/instructions";
 
 let cpu: ICpu;
 beforeEach(() => {
@@ -61,5 +62,40 @@ describe("decode", () => {
     expect(spy).toHaveBeenCalledWith(0x00e0);
     expect(spy).toHaveBeenCalledTimes(1);
     spy.mockRestore();
+  });
+});
+
+describe("execute", () => {
+  it("executes an instruction", () => {
+    const instruction = instructions.load;
+    const x = 0;
+    const kk = 0xf0;
+    cpu.execute(instruction, { x, kk });
+    expect(cpu.registers[x]).toEqual(kk);
+  });
+});
+
+describe("step", () => {
+  it("runs an FDE cycle", () => {
+    // 6xkk should load kk into register x
+    cpu.load([0x60, 0xf0]);
+    cpu.step();
+    expect(cpu.registers[0]).toEqual(0xf0);
+  });
+
+  it("runs a few in a row if called multiple times", () => {
+    cpu.load([0x60, 0xaa, 0x61, 0xbb, 0x62, 0xcc]);
+    cpu.step();
+    expect(cpu.registers[0]).toEqual(0xaa);
+    expect(cpu.registers[1]).toEqual(0);
+    expect(cpu.registers[2]).toEqual(0);
+    cpu.step();
+    expect(cpu.registers[0]).toEqual(0xaa);
+    expect(cpu.registers[1]).toEqual(0xbb);
+    expect(cpu.registers[2]).toEqual(0);
+    cpu.step();
+    expect(cpu.registers[0]).toEqual(0xaa);
+    expect(cpu.registers[1]).toEqual(0xbb);
+    expect(cpu.registers[2]).toEqual(0xcc);
   });
 });

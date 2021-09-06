@@ -48,8 +48,13 @@ interface ICpu {
   // FDE cycle
   fetch: () => number;
   decode: (opcode: number) => {
-    instruction: InstructionMneumonic;
+    instruction: Instruction;
     args: InstructionArgs;
   };
-  execute: () => void;
+  execute: (instruction: Instruction, arguments: InstructionArgs) => void;
+
+  // Run commands
+  step: () => void;
+  play: () => void;
+  pause: () => void;
 }

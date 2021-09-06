@@ -6,14 +6,14 @@ describe("decode", () => {
   // below - these tests are purely testing the behavior of the 'decode' function)
   it("correctly decodes 0nnn", () => {
     expect(decode(0x0123)).toEqual({
-      instruction: "sys",
+      instruction: instructions.sys,
       args: { nnn: 0x123 },
     });
   });
 
   it("correctly decodes 00e0", () => {
     expect(decode(0x00e0)).toEqual({
-      instruction: "cls",
+      instruction: instructions.cls,
       args: {},
     });
   });

@@ -113,6 +113,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;
+
       cpu.pc += 0x2;
     },
   },
