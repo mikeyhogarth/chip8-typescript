@@ -76,15 +76,25 @@ describe("execute", () => {
 });
 
 describe("step", () => {
+  it("advances the program counter", () => {
+    const originalPC = cpu.pc;
+    cpu.step();
+    expect(cpu.pc).toEqual(originalPC + 2);
+  });
+
   it("runs an FDE cycle", () => {
     // 6xkk should load kk into register x
-    cpu.load([0x60, 0xf0]);
+
+    cpu.load(Buffer.from([0x60, 0xf0]));
     cpu.step();
     expect(cpu.registers[0]).toEqual(0xf0);
   });
 
-  it("runs a few in a row if called multiple times", () => {
-    cpu.load([0x60, 0xaa, 0x61, 0xbb, 0x62, 0xcc]);
+  it("can be run several times in a row", () => {
+    // 6xkk should load kk into register x - this program loads
+    // 0xaa, 0xbb and 0xcc into registers 0, 1, and 2 respectively.
+    const program = Buffer.from([0x60, 0xaa, 0x61, 0xbb, 0x62, 0xcc]);
+    cpu.load(program);
     cpu.step();
     expect(cpu.registers[0]).toEqual(0xaa);
     expect(cpu.registers[1]).toEqual(0);
