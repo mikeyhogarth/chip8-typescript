@@ -1,5 +1,3 @@
-import { IOInterface } from "../io";
-
 export function createMemoryIO(): IOInterface {
   return {
     display: createBlankDisplay(),

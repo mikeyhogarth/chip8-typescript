@@ -1,5 +1,5 @@
 import { instructions } from "./instructions";
-import { createCpu, ICpu } from "../cpu";
+import { createCpu } from "../cpu";
 import { createMemoryIO } from "../io/memory.io";
 
 let cpu: ICpu;

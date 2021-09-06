@@ -1,35 +1,5 @@
-import { ICpu } from "../cpu";
 import { xkkDecoder, nnnDecoder, nullDecoder, xyDecoder } from "./decoders";
-
-type INNNArgs = { nnn: number };
-type IXYArgs = { x: number; y: number };
-type IXKKArgs = { x: number; kk: number };
-type INullArgs = {};
-export type InstructionArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
-
-export interface Instruction {
-  id: InstructionMneumonic;
-  execute: (cpu: ICpu, args?: InstructionArgs) => void;
-  decodeArgs: (opcode: number) => InstructionArgs;
-  // Each opcode has a "pattern" and a "mask" that will reveal that pattern.
-  pattern: number;
-  mask: number;
-}
-
-export enum InstructionMneumonic {
-  sys = "sys",
-  cls = "cls",
-  jmp = "jmp",
-  ret = "ret",
-  call = "call",
-  skipIfEqual = "skipIfEqual",
-  skipIfNotEqual = "skipIfNotEqual",
-  skipIfEqualRegisters = "skipIfEqualRegisters",
-  load = "load",
-  add = "add",
-  loadReg = "loadReg",
-}
-
+import { InstructionMneumonic } from "./mneumonics";
 /**
  * list of instructions
  */

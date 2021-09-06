@@ -1,5 +1,5 @@
-import { createCpu, ICpu } from "./cpu";
-import * as decoders from "./cpu/decoders";
+import { createCpu } from "./cpu";
+import * as utils from "./cpu/instruction-utils";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -56,7 +56,7 @@ describe("fetch", () => {
 
 describe("decode", () => {
   it("Offloads the work to the external 'decode' function", () => {
-    const spy = jest.spyOn(decoders, "decode");
+    const spy = jest.spyOn(utils, "decode");
     cpu.decode(0x00e0);
     expect(spy).toHaveBeenCalledWith(0x00e0);
     expect(spy).toHaveBeenCalledTimes(1);

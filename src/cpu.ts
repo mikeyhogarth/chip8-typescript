@@ -1,40 +1,9 @@
-import { InstructionArgs, InstructionMneumonic } from "./cpu/instructions";
-import { findByBytecode, decode } from "./cpu/decoders";
-import { IOInterface } from "./io";
+import { decode } from "./cpu/instruction-utils";
 import { createMemoryIO } from "./io/memory.io";
 
 // The first 0x1FF bytes of memory are reserved for the CHIP8 interpreter, so all
 // CHIP8 programs start at 0x200.
 const MEMORY_START = 0x200;
-
-/*
- * Tech spec:
- * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
- */
-export interface ICpu {
-  // CPU components
-  stack: Uint16Array;
-  memory: Uint8ClampedArray;
-  registers: Uint8ClampedArray;
-  pc: number;
-  sp: number;
-  delayTimer: number;
-  soundTimer: number;
-
-  // load data into memory
-  load: (data: Buffer) => void;
-
-  // The IO interface
-  io: IOInterface;
-
-  // FDE cycle
-  fetch: () => number;
-  decode: (opcode: number) => {
-    instruction: InstructionMneumonic;
-    args: InstructionArgs;
-  };
-  execute: () => void;
-}
 
 class Cpu implements ICpu {
   constructor(
