@@ -155,4 +155,16 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+  // 8xy2 - OR Vx, Vy
+  and: {
+    id: InstructionMneumonic.and,
+    pattern: 0x8002,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.registers[0] = cpu.registers[0] & cpu.registers[1];
+      cpu.pc += 0x2;
+    },
+  },
 };
