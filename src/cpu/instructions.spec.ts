@@ -148,7 +148,7 @@ describe("add", () => {
 
 // 8xy1 - OR Vx, Vy
 describe("or", () => {
-  it("Bitwise OR's Vy and Vx", () => {
+  it("Bitwise OR's Vy and Vx, stores result in Vx", () => {
     cpu.registers[0] = 0b00010100;
     cpu.registers[1] = 0b00101000;
     const resultOfOr = 0b00111100;
@@ -160,12 +160,24 @@ describe("or", () => {
 
 // 8xy2 - AND Vx, Vy
 describe("and", () => {
-  it("Bitwise OR's Vy and Vx", () => {
+  it("Bitwise OR's Vy and Vx, stores result in Vx", () => {
     cpu.registers[0] = 0b00110100;
     cpu.registers[1] = 0b00101100;
     const resultOfAnd = 0b00100100;
     instructions.and.execute(cpu, { x: 0, y: 1 });
     expect(cpu.registers[0]).toEqual(resultOfAnd);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// 8xy3 - XOR Vx, Vy
+describe("xor", () => {
+  it("Bitwise XOR's Vy and Vx, stores result in Vx", () => {
+    cpu.registers[0] = 0b00110100;
+    cpu.registers[1] = 0b00101100;
+    const resultOfXor = 0b00011000;
+    instructions.xor.execute(cpu, { x: 0, y: 1 });
+    expect(cpu.registers[0]).toEqual(resultOfXor);
     expect(cpu.pc).toEqual(0x202);
   });
 });

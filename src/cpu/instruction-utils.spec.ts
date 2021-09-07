@@ -20,6 +20,10 @@ describe("decode", () => {
 });
 
 describe("Instruction decoding", () => {
+  // Each item in this list should be an array of length three, with the elements represeting;
+  // element 0: an opcode
+  // element 1: the instrution that opcode should match to
+  // element 2: the arguments that should be extracted from the opcode
   const opcodeTestPairs: [number, Instruction, InstructionArgs][] = [
     // 0nnn - SYS addr
     [0x0123, instructions.sys, { nnn: 0x123 }],
@@ -47,6 +51,8 @@ describe("Instruction decoding", () => {
     [0x8011, instructions.or, { x: 0, y: 1 }],
     // 8xy2 - AND Vx, Vy
     [0x8012, instructions.and, { x: 0, y: 1 }],
+    // 8xy3 - XOR Vx, Vy
+    [0x8013, instructions.xor, { x: 0, y: 1 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
