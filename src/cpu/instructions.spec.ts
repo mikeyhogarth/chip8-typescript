@@ -8,6 +8,15 @@ beforeEach(() => {
   cpu = createCpu();
 });
 
+describe("instructions", () => {
+  it("is as long as it should be", () => {
+    // There are 35 opcodes in chip8 - this test is purely here as a
+    // gauge to figure out how far along the project is, but will eventually
+    // be a test to make sure there are as many opcodes as there should be.
+    expect(Object.keys(instructions).length).toEqual(14);
+  });
+});
+
 // 0nnn - SYS addr
 describe("sys", () => {
   it("does nothing except increment the PC", () => {
