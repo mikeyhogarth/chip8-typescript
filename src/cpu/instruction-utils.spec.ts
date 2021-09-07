@@ -43,6 +43,8 @@ describe("Instruction decoding", () => {
     [0x7123, instructions.add, { x: 1, kk: 0x23 }],
     // 8xy0 - LD Vx, Vy
     [0x8120, instructions.loadReg, { x: 1, y: 2 }],
+    // 8xy1 - OR Vx, Vy
+    [0x8011, instructions.or, { x: 0, y: 1 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

@@ -145,3 +145,15 @@ describe("add", () => {
     expect(cpu.pc).toEqual(0x202);
   });
 });
+
+// 8xy1 - OR Vx, Vy
+describe("or", () => {
+  it("Bitwise OR's Vy and Vx", () => {
+    cpu.registers[0] = 0b00010100;
+    cpu.registers[1] = 0b00101000;
+    const resultOfOr = 0b00111100;
+    instructions.or.execute(cpu, { x: 0, y: 1 });
+    expect(cpu.registers[0]).toEqual(resultOfOr);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
