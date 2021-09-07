@@ -53,8 +53,6 @@ interface ICpu {
   };
   execute: (instruction: Instruction, arguments: InstructionArgs) => void;
 
-  // Run commands
-  step: () => void;
-  play: () => void;
-  pause: () => void;
+  // Run a CPU fetch-decode-execute cycle
+  cycle: () => void;
 }

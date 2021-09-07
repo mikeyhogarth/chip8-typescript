@@ -66,17 +66,10 @@ class Cpu implements ICpu {
   }
 
   // run through one step of a CPU fetch-decode-execute cycle.
-  step() {
+  cycle() {
     const opcode = this.fetch();
     const { instruction, args } = decode(opcode);
     this.execute(instruction, args);
-  }
-
-  play() {
-    return new Error("Not Implemented");
-  }
-  pause() {
-    return new Error("Not Implemented");
   }
 }
 

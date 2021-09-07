@@ -75,10 +75,10 @@ describe("execute", () => {
   });
 });
 
-describe("step", () => {
+describe("cycle", () => {
   it("advances the program counter", () => {
     const originalPC = cpu.pc;
-    cpu.step();
+    cpu.cycle();
     expect(cpu.pc).toEqual(originalPC + 2);
   });
 
@@ -86,7 +86,7 @@ describe("step", () => {
     // 6xkk should load kk into register x
 
     cpu.load(Buffer.from([0x60, 0xf0]));
-    cpu.step();
+    cpu.cycle();
     expect(cpu.registers[0]).toEqual(0xf0);
   });
 
@@ -95,15 +95,15 @@ describe("step", () => {
     // 0xaa, 0xbb and 0xcc into registers 0, 1, and 2 respectively.
     const program = Buffer.from([0x60, 0xaa, 0x61, 0xbb, 0x62, 0xcc]);
     cpu.load(program);
-    cpu.step();
+    cpu.cycle();
     expect(cpu.registers[0]).toEqual(0xaa);
     expect(cpu.registers[1]).toEqual(0);
     expect(cpu.registers[2]).toEqual(0);
-    cpu.step();
+    cpu.cycle();
     expect(cpu.registers[0]).toEqual(0xaa);
     expect(cpu.registers[1]).toEqual(0xbb);
     expect(cpu.registers[2]).toEqual(0);
-    cpu.step();
+    cpu.cycle();
     expect(cpu.registers[0]).toEqual(0xaa);
     expect(cpu.registers[1]).toEqual(0xbb);
     expect(cpu.registers[2]).toEqual(0xcc);
