@@ -151,7 +151,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
-      cpu.registers[0] = cpu.registers[0] | cpu.registers[1];
+      cpu.registers[x] = cpu.registers[x] | cpu.registers[y];
       cpu.pc += 0x2;
     },
   },
@@ -163,7 +163,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
-      cpu.registers[0] = cpu.registers[0] & cpu.registers[1];
+      cpu.registers[x] = cpu.registers[x] & cpu.registers[y];
       cpu.pc += 0x2;
     },
   },
@@ -175,7 +175,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
-      cpu.registers[0] = cpu.registers[0] ^ cpu.registers[1];
+      cpu.registers[x] = cpu.registers[x] ^ cpu.registers[y];
       cpu.pc += 0x2;
     },
   },
