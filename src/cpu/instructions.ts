@@ -179,4 +179,19 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
+  // 8xy4 - ADD Vx, Vy
+  addReg: {
+    id: InstructionMneumonic.addReg,
+    pattern: 0x8004,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      const sum = cpu.registers[x] + cpu.registers[y];
+      cpu.registers[0xf] = sum > 0xff ? 1 : 0;
+      cpu.registers[x] = sum;
+      cpu.pc += 0x2;
+    },
+  },
 };

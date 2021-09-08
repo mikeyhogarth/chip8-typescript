@@ -16,4 +16,5 @@ export enum InstructionMneumonic {
   or = "or",
   and = "and",
   xor = "xor",
+  addReg = "addReg",
 }

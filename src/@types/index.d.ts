@@ -32,8 +32,8 @@ interface Instruction {
 interface ICpu {
   // CPU components
   stack: Uint16Array;
-  memory: Uint8ClampedArray;
-  registers: Uint8ClampedArray;
+  memory: Uint8Array;
+  registers: Uint8Array;
   pc: number;
   sp: number;
   delayTimer: number;

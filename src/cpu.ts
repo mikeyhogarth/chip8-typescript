@@ -10,9 +10,9 @@ class Cpu implements ICpu {
   constructor(
     public io: IOInterface = createMemoryIO(),
     // 4096 8-bit data registers
-    public memory = new Uint8ClampedArray(0x1000),
+    public memory = new Uint8Array(0x1000),
     // 16 8-bit data registers named V0 to VF
-    public registers = new Uint8ClampedArray(0x10),
+    public registers = new Uint8Array(0x10),
     // 16 x 16 bit values for the stack
     public stack = new Uint16Array(0x10),
     // 16 bit program counter (which starts at 0x200 due to chip8 interpreter taking up the first 512 bytes)
