@@ -17,4 +17,5 @@ export enum InstructionMneumonic {
   and = "and",
   xor = "xor",
   addReg = "addReg",
+  sub = "sub",
 }

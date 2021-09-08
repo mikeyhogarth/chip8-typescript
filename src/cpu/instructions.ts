@@ -143,6 +143,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
   // 8xy1 - OR Vx, Vy
   or: {
     id: InstructionMneumonic.or,
@@ -155,6 +156,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
   // 8xy2 - OR Vx, Vy
   and: {
     id: InstructionMneumonic.and,
@@ -167,6 +169,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
   // 8xy3 - XOR Vx, Vy
   xor: {
     id: InstructionMneumonic.xor,
@@ -191,6 +194,20 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const sum = cpu.registers[x] + cpu.registers[y];
       cpu.registers[0xf] = sum > 0xff ? 1 : 0;
       cpu.registers[x] = sum;
+      cpu.pc += 0x2;
+    },
+  },
+
+  // 8xy5 - SUB Vx, Vy
+  sub: {
+    id: InstructionMneumonic.addReg,
+    pattern: 0x8005,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.registers[0xf] = cpu.registers[x] > cpu.registers[y] ? 1 : 0;
+      cpu.registers[x] = cpu.registers[x] - cpu.registers[y];
       cpu.pc += 0x2;
     },
   },

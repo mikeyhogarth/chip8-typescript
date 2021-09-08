@@ -55,6 +55,8 @@ describe("Instruction decoding", () => {
     [0x8013, instructions.xor, { x: 0, y: 1 }],
     // 8xy4 - ADD Vx, Vy
     [0x8014, instructions.addReg, { x: 0, y: 1 }],
+    // 8xy5 - ADD Vx, Vy
+    [0x8015, instructions.sub, { x: 0, y: 1 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
