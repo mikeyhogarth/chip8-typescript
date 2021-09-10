@@ -200,7 +200,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy5 - SUB Vx, Vy
   sub: {
-    id: InstructionMneumonic.addReg,
+    id: InstructionMneumonic.sub,
     pattern: 0x8005,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -222,6 +222,20 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x } = args as IXYArgs;
       cpu.registers[0xf] = cpu.registers[x] & 1;
       cpu.registers[x] = cpu.registers[x] >> 1;
+      cpu.pc += 0x2;
+    },
+  },
+
+  // 8xy7 - SUBN Vx, Vy
+  subn: {
+    id: InstructionMneumonic.subn,
+    pattern: 0x8007,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.registers[0xf] = cpu.registers[y] > cpu.registers[x] ? 1 : 0;
+      cpu.registers[x] = cpu.registers[y] - cpu.registers[x];
       cpu.pc += 0x2;
     },
   },

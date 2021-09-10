@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(17);
+    expect(Object.keys(instructions).length).toEqual(18);
   });
 });
 
@@ -284,6 +284,42 @@ describe("sub", () => {
         instructions.shr.execute(cpu, { x });
         expect(cpu.registers[0xf]).toEqual(0);
         expect(cpu.registers[x]).toEqual(Math.floor(val / 2));
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+  });
+
+  // 8xy7 - SUBN Vx, Vy
+  describe("subn", () => {
+    describe("if vy > vx", () => {
+      it("subtracts vx from vy and sets vf to 1", () => {
+        cpu.registers[0] = 4;
+        cpu.registers[1] = 5;
+        instructions.subn.execute(cpu, { x: 0, y: 1 });
+        expect(cpu.registers[0]).toEqual(1);
+        expect(cpu.registers[0xf]).toEqual(1);
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+
+    describe("if vy === vy", () => {
+      it("subtracts vx from vy and sets vf to 0", () => {
+        cpu.registers[0] = 5;
+        cpu.registers[1] = 5;
+        instructions.subn.execute(cpu, { x: 0, y: 1 });
+        expect(cpu.registers[0]).toEqual(0);
+        expect(cpu.registers[0xf]).toEqual(0);
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+
+    describe("if vy <= vx", () => {
+      it("subtracts vx from vy and sets vf to 0", () => {
+        cpu.registers[0] = 5;
+        cpu.registers[1] = 4;
+        instructions.subn.execute(cpu, { x: 0, y: 1 });
+        expect(cpu.registers[0]).toEqual(0b11111111);
+        expect(cpu.registers[0xf]).toEqual(0);
         expect(cpu.pc).toEqual(0x202);
       });
     });
