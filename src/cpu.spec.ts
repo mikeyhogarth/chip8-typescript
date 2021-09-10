@@ -1,4 +1,4 @@
-import { createCpu } from "./cpu";
+import { createCpu, Cpu } from "./cpu";
 import * as utils from "./cpu/instruction-utils";
 import * as fs from "fs";
 import * as path from "path";
@@ -7,6 +7,12 @@ import { instructions } from "./cpu/instructions";
 let cpu: ICpu;
 beforeEach(() => {
   cpu = createCpu();
+});
+
+describe("Cpu", () => {
+  it("Can be constructed", () => {
+    expect(() => new Cpu()).not.toThrowError();
+  });
 });
 
 describe("createCpu", () => {

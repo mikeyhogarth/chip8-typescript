@@ -6,7 +6,7 @@ import { InstructionMneumonic } from "./cpu/mneumonics";
 // CHIP8 programs start at 0x200.
 const MEMORY_START = 0x200;
 
-class Cpu implements ICpu {
+export class Cpu implements ICpu {
   constructor(
     public io: IOInterface = createMemoryIO(),
     // 4096 8-bit data registers
