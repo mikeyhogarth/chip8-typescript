@@ -211,4 +211,18 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
+  // 8xy6 - SHR Vx {, Vy}
+  shr: {
+    id: InstructionMneumonic.shr,
+    pattern: 0x8006,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXYArgs;
+      cpu.registers[0xf] = cpu.registers[x] & 1;
+      cpu.registers[x] = cpu.registers[x] >> 1;
+      cpu.pc += 0x2;
+    },
+  },
 };

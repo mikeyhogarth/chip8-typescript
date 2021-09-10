@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(16);
+    expect(Object.keys(instructions).length).toEqual(17);
   });
 });
 
@@ -236,6 +236,7 @@ describe("sub", () => {
       instructions.sub.execute(cpu, { x: 0, y: 1 });
       expect(cpu.registers[0]).toEqual(1);
       expect(cpu.registers[0xf]).toEqual(1);
+      expect(cpu.pc).toEqual(0x202);
     });
   });
 
@@ -246,6 +247,7 @@ describe("sub", () => {
       instructions.sub.execute(cpu, { x: 0, y: 1 });
       expect(cpu.registers[0]).toEqual(0);
       expect(cpu.registers[0xf]).toEqual(0);
+      expect(cpu.pc).toEqual(0x202);
     });
   });
 
@@ -256,6 +258,34 @@ describe("sub", () => {
       instructions.sub.execute(cpu, { x: 0, y: 1 });
       expect(cpu.registers[0]).toEqual(0b11111111);
       expect(cpu.registers[0xf]).toEqual(0);
+      expect(cpu.pc).toEqual(0x202);
+    });
+  });
+
+  // 8xy6 - SHR Vx {, Vy}
+  describe("shr", () => {
+    describe("If the least-significant bit of Vx is 1", () => {
+      it("sets VF to 1, then Vx is divided by 2.", () => {
+        const x = 0;
+        const val = 0b00000101;
+        cpu.registers[x] = val;
+        instructions.shr.execute(cpu, { x });
+        expect(cpu.registers[0xf]).toEqual(1);
+        expect(cpu.registers[x]).toEqual(Math.floor(val / 2));
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+
+    describe("If the least-significant bit of Vx is 0", () => {
+      it("sets VF to 0, then Vx is divided by 2.", () => {
+        const x = 0;
+        const val = 0b00000100;
+        cpu.registers[x] = val;
+        instructions.shr.execute(cpu, { x });
+        expect(cpu.registers[0xf]).toEqual(0);
+        expect(cpu.registers[x]).toEqual(Math.floor(val / 2));
+        expect(cpu.pc).toEqual(0x202);
+      });
     });
   });
 });
