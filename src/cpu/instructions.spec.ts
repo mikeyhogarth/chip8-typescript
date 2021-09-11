@@ -81,12 +81,12 @@ describe("skipIfEqual", () => {
     const kk = 0xf0;
 
     // when register 0 is NOT set to KK, it should NOT skip
-    instructions.skipIfEqual.execute(cpu, { x: 0, kk });
+    instructions.seq.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x202);
 
     // when register 0 is set to KK, it should skip
     cpu.registers[0] = kk;
-    instructions.skipIfEqual.execute(cpu, { x: 0, kk });
+    instructions.seq.execute(cpu, { x: 0, kk });
     expect(cpu.pc).toEqual(0x206);
   });
 });
@@ -96,7 +96,7 @@ describe("skipNotIfEqual", () => {
   describe("when vx !== kk", () => {
     it("skips the next instruction", () => {
       // when register 0 is NOT set to KK, it should skip
-      instructions.skipIfNotEqual.execute(cpu, { x: 0, kk: 1 });
+      instructions.sne.execute(cpu, { x: 0, kk: 1 });
       expect(cpu.pc).toEqual(0x204);
     });
   });
@@ -107,7 +107,7 @@ describe("skipNotIfEqual", () => {
 
       // when register 0 is set to KK, it should NOT skip
       cpu.registers[0] = kk;
-      instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
+      instructions.sne.execute(cpu, { x: 0, kk });
       expect(cpu.pc).toEqual(0x202);
     });
   });
@@ -119,13 +119,13 @@ describe("skipIfEqualRegisters", () => {
     // when registers are equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 1;
-    instructions.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
+    instructions.seqReg.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x204);
 
     // when registers are NOT equal, it should skip
     cpu.registers[0] = 1;
     cpu.registers[1] = 2;
-    instructions.skipIfEqualRegisters.execute(cpu, { x: 0, y: 1 });
+    instructions.seqReg.execute(cpu, { x: 0, y: 1 });
     expect(cpu.pc).toEqual(0x206);
   });
 });

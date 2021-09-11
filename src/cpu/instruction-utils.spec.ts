@@ -18,11 +18,11 @@ describe("Instruction decoding", () => {
     // 2nnn - CALL addr
     [0x2123, instructions.call, { nnn: 0x123 }],
     // 3xkk - SE Vx, byte
-    [0x3123, instructions.skipIfEqual, { x: 1, kk: 0x23 }],
+    [0x3123, instructions.seq, { x: 1, kk: 0x23 }],
     // 4xkk - SNE Vx, byte
-    [0x4123, instructions.skipIfNotEqual, { x: 1, kk: 0x23 }],
+    [0x4123, instructions.sne, { x: 1, kk: 0x23 }],
     // 5xy0 - SE Vx, Vy
-    [0x5120, instructions.skipIfEqualRegisters, { x: 1, y: 2 }],
+    [0x5120, instructions.seqReg, { x: 1, y: 2 }],
     // 6xkk - LD Vx, byte
     [0x6123, instructions.load, { x: 1, kk: 0x23 }],
     // 7xkk - ADD Vx, byte

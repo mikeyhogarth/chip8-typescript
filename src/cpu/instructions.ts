@@ -64,7 +64,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   },
 
   // 3xkk - SE Vx, byte
-  skipIfEqual: {
+  seq: {
     pattern: 0x3000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -75,7 +75,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   },
 
   // 4xkk - SNE Vx, byte
-  skipIfNotEqual: {
+  sne: {
     pattern: 0x4000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -86,7 +86,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   },
 
   // 5xy0 - SE Vx, Vy
-  skipIfEqualRegisters: {
+  seqReg: {
     pattern: 0x5000,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
