@@ -203,7 +203,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x } = args as IXYArgs;
-      cpu.registers[0xf] = cpu.registers[x] & 1;
+      cpu.registers[0xf] = cpu.registers[x] & 1; // & 1 gets us the LSB
       cpu.registers[x] = cpu.registers[x] >> 1;
       cpu.pc += 0x2;
     },
@@ -222,13 +222,14 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     },
   },
 
+  // 8xyE - SHL Vx {, Vy}
   shl: {
     pattern: 0x800e,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
     execute(cpu, args) {
       const { x } = args as IXYArgs;
-      cpu.registers[0xf] = cpu.registers[x] >> 7;
+      cpu.registers[0xf] = cpu.registers[x] >> 7; // >> 7 gets us the MSB in a byte
       cpu.registers[x] = cpu.registers[x] << 1;
       cpu.pc += 0x2;
     },
