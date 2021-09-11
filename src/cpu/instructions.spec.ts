@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(18);
+    expect(Object.keys(instructions).length).toEqual(19);
   });
 });
 
@@ -319,6 +319,28 @@ describe("sub", () => {
         cpu.registers[1] = 4;
         instructions.subn.execute(cpu, { x: 0, y: 1 });
         expect(cpu.registers[0]).toEqual(0b11111111);
+        expect(cpu.registers[0xf]).toEqual(0);
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+  });
+
+  // 8xyE - SHL Vx {, Vy}
+  describe("shl", () => {
+    describe("If the most-significant bit of Vx is 1", () => {
+      it("sets VF to 1, then Vx is multiplied by 2.", () => {
+        cpu.registers[0] = 0b11000000;
+        instructions.shl.execute(cpu, { x: 0 });
+        expect(cpu.registers[0]).toEqual(0b10000000);
+        expect(cpu.registers[0xf]).toEqual(1);
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+    describe("If the most-significant bit of Vx is 0", () => {
+      it("sets VF to 0, then Vx is multiplied by 2.", () => {
+        cpu.registers[0] = 0b00000011;
+        instructions.shl.execute(cpu, { x: 0 });
+        expect(cpu.registers[0]).toEqual(0b00000110);
         expect(cpu.registers[0xf]).toEqual(0);
         expect(cpu.pc).toEqual(0x202);
       });

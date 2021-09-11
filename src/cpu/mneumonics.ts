@@ -20,4 +20,5 @@ export enum InstructionMneumonic {
   sub = "sub",
   shr = "shr",
   subn = "subn",
+  shl = "shl",
 }
