@@ -234,4 +234,15 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 0x2;
     },
   },
+
+  // 9xy0 - SNE Vx, Vy
+  sneReg: {
+    pattern: 0x9000,
+    mask: 0xf00f,
+    decodeArgs: xyDecoder,
+    execute(cpu, args) {
+      const { x, y } = args as IXYArgs;
+      cpu.pc += cpu.registers[x] !== cpu.registers[y] ? 2 : 4;
+    },
+  },
 };

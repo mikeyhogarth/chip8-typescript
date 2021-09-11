@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(19);
+    expect(Object.keys(instructions).length).toEqual(20);
   });
 });
 
@@ -93,17 +93,23 @@ describe("skipIfEqual", () => {
 
 // 4xkk - SNE Vx, byte
 describe("skipNotIfEqual", () => {
-  it("Skips next instruction if Vx !== kk", () => {
-    const kk = 0xf0;
+  describe("when vx !== kk", () => {
+    it("skips the next instruction", () => {
+      // when register 0 is NOT set to KK, it should skip
+      instructions.skipIfNotEqual.execute(cpu, { x: 0, kk: 1 });
+      expect(cpu.pc).toEqual(0x204);
+    });
+  });
 
-    // when register 0 is NOT set to KK, it should skip
-    instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
-    expect(cpu.pc).toEqual(0x204);
+  describe("when vx === kk", () => {
+    it("does not skip the next instruction", () => {
+      const kk = 0xf0;
 
-    // when register 0 is set to KK, it should NOT skip
-    cpu.registers[0] = kk;
-    instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
-    expect(cpu.pc).toEqual(0x206);
+      // when register 0 is set to KK, it should NOT skip
+      cpu.registers[0] = kk;
+      instructions.skipIfNotEqual.execute(cpu, { x: 0, kk });
+      expect(cpu.pc).toEqual(0x202);
+    });
   });
 });
 
@@ -342,6 +348,27 @@ describe("sub", () => {
         instructions.shl.execute(cpu, { x: 0 });
         expect(cpu.registers[0]).toEqual(0b00000110);
         expect(cpu.registers[0xf]).toEqual(0);
+        expect(cpu.pc).toEqual(0x202);
+      });
+    });
+  });
+
+  // 9xy0 - SNE Vx, Vy
+  describe("sneReg", () => {
+    describe("when vx !== vy", () => {
+      it("skips the next instruction", () => {
+        cpu.registers[0] = 1;
+        cpu.registers[1] = 1;
+        instructions.sneReg.execute(cpu, { x: 0, y: 1 });
+        expect(cpu.pc).toEqual(0x204);
+      });
+    });
+
+    describe("when vx === vy", () => {
+      it("does not skip the next instruction", () => {
+        cpu.registers[0] = 1;
+        cpu.registers[0] = 2;
+        instructions.sneReg.execute(cpu, { x: 0, y: 1 });
         expect(cpu.pc).toEqual(0x202);
       });
     });
