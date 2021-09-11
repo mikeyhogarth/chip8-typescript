@@ -6,7 +6,6 @@ import { InstructionMneumonic } from "./mneumonics";
 export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   // 0nnn - SYS addr
   sys: {
-    id: InstructionMneumonic.sys,
     pattern: 0x0000,
     mask: 0xf000,
     decodeArgs: nnnDecoder,
@@ -17,7 +16,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 00E0 - CLS
   cls: {
-    id: InstructionMneumonic.cls,
     pattern: 0x00e0,
     mask: 0xffff,
     decodeArgs: nullDecoder,
@@ -29,7 +27,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 00EE - RET
   ret: {
-    id: InstructionMneumonic.ret,
     pattern: 0x00ee,
     mask: 0xffff,
     decodeArgs: nullDecoder,
@@ -44,7 +41,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 1nnn - JP addr
   jmp: {
-    id: InstructionMneumonic.jmp,
     pattern: 0x1000,
     mask: 0xf000,
     decodeArgs: nnnDecoder,
@@ -56,7 +52,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 2nnn - CALL addr
   call: {
-    id: InstructionMneumonic.call,
     pattern: 0x2000,
     mask: 0xf000,
     decodeArgs: nnnDecoder,
@@ -70,7 +65,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 3xkk - SE Vx, byte
   skipIfEqual: {
-    id: InstructionMneumonic.skipIfEqual,
     pattern: 0x3000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -82,7 +76,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 4xkk - SNE Vx, byte
   skipIfNotEqual: {
-    id: InstructionMneumonic.skipIfNotEqual,
     pattern: 0x4000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -94,7 +87,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 5xy0 - SE Vx, Vy
   skipIfEqualRegisters: {
-    id: InstructionMneumonic.skipIfEqualRegisters,
     pattern: 0x5000,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -106,7 +98,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 6xkk - LD Vx, byte
   load: {
-    id: InstructionMneumonic.load,
     pattern: 0x6000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -120,7 +111,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 7xkk - ADD Vx, byte
   add: {
-    id: InstructionMneumonic.add,
     pattern: 0x7000,
     mask: 0xf000,
     decodeArgs: xkkDecoder,
@@ -133,7 +123,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy0 - LD Vx, Vy
   loadReg: {
-    id: InstructionMneumonic.loadReg,
     pattern: 0x8000,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -146,7 +135,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy1 - OR Vx, Vy
   or: {
-    id: InstructionMneumonic.or,
     pattern: 0x8001,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -159,7 +147,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy2 - OR Vx, Vy
   and: {
-    id: InstructionMneumonic.and,
     pattern: 0x8002,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -172,7 +159,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy3 - XOR Vx, Vy
   xor: {
-    id: InstructionMneumonic.xor,
     pattern: 0x8003,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -185,7 +171,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy4 - ADD Vx, Vy
   addReg: {
-    id: InstructionMneumonic.addReg,
     pattern: 0x8004,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -200,7 +185,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy5 - SUB Vx, Vy
   sub: {
-    id: InstructionMneumonic.sub,
     pattern: 0x8005,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -214,7 +198,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy6 - SHR Vx {, Vy}
   shr: {
-    id: InstructionMneumonic.shr,
     pattern: 0x8006,
     mask: 0xf00f,
     decodeArgs: xyDecoder,
@@ -228,7 +211,6 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
 
   // 8xy7 - SUBN Vx, Vy
   subn: {
-    id: InstructionMneumonic.subn,
     pattern: 0x8007,
     mask: 0xf00f,
     decodeArgs: xyDecoder,

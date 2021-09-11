@@ -13,7 +13,6 @@ type INullArgs = {};
 type InstructionArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
 
 interface Instruction {
-  id: InstructionMneumonic;
   execute: (cpu: ICpu, args?: InstructionArgs) => void;
   decodeArgs: (opcode: number) => InstructionArgs;
   // Each opcode has a "pattern" and a "mask" that will reveal that pattern.

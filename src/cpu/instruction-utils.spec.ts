@@ -1,24 +1,6 @@
 import { decode, findByBytecode } from "./instruction-utils";
 import { instructions } from "./instructions";
 
-describe("decode", () => {
-  // test the behavior on a couple of opcodes (they're all tested independently
-  // below - these tests are purely testing the behavior of the 'decode' function)
-  it("correctly decodes 0nnn", () => {
-    expect(decode(0x0123)).toEqual({
-      instruction: instructions.sys,
-      args: { nnn: 0x123 },
-    });
-  });
-
-  it("correctly decodes 00e0", () => {
-    expect(decode(0x00e0)).toEqual({
-      instruction: instructions.cls,
-      args: {},
-    });
-  });
-});
-
 describe("Instruction decoding", () => {
   // Each item in this list should be an array of length three, with the elements represeting;
   // element 0: an opcode
@@ -76,20 +58,33 @@ describe("Instruction decoding", () => {
 
     // test each of the cases defined above
     opcodeTestPairs.forEach(([bytecode, instruction]) => {
-      describe(instruction.id, () => {
-        it("is found correctly", () => {
+      describe(`given bytecode ${bytecode.toString(16)}`, () => {
+        it("finds the instruction correctly", () => {
           expect(findByBytecode(bytecode)).toEqual(instruction);
         });
       });
     });
+  });
 
-    describe("arg decoding", () => {
-      // test each of the cases defined above
-      opcodeTestPairs.forEach(([bytecode, instruction, args]) => {
-        describe(instruction.id, () => {
-          it("decodes args correctly", () => {
-            expect(instruction.decodeArgs(bytecode)).toEqual(args);
-          });
+  describe("decode", () => {
+    it("correctly decodes 0nnn", () => {
+      expect(decode(0x0123)).toEqual({
+        instruction: instructions.sys,
+        args: { nnn: 0x123 },
+      });
+    });
+
+    it("correctly decodes 00e0", () => {
+      expect(decode(0x00e0)).toEqual({
+        instruction: instructions.cls,
+        args: {},
+      });
+    });
+    // test each of the cases defined above
+    opcodeTestPairs.forEach(([bytecode, instruction, args]) => {
+      describe(`given bytecode ${bytecode.toString(16)}`, () => {
+        it("decodes the arguments correctly", () => {
+          expect(instruction.decodeArgs(bytecode)).toEqual(args);
         });
       });
     });
