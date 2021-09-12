@@ -35,6 +35,7 @@ interface ICpu {
   registers: Uint8Array;
   pc: number;
   sp: number;
+  i: number;
   delayTimer: number;
   soundTimer: number;
 

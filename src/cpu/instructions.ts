@@ -245,4 +245,16 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += cpu.registers[x] !== cpu.registers[y] ? 2 : 4;
     },
   },
+
+  // Annn - LD I, addr
+  loadI: {
+    pattern: 0xa000,
+    mask: 0xf000,
+    decodeArgs: nnnDecoder,
+    execute(cpu, args) {
+      const { nnn } = args as INNNArgs;
+      cpu.i = nnn;
+      cpu.pc += 2;
+    },
+  },
 };

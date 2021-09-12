@@ -17,8 +17,10 @@ export class Cpu implements ICpu {
     public stack = new Uint16Array(0x10),
     // 16 bit program counter (which starts at 0x200 due to chip8 interpreter taking up the first 512 bytes)
     public pc = MEMORY_START,
-    // 16 bit stack pointer
+    // 8 bit stack pointer
     public sp = -1,
+    // 16-bit register called I, This register is generally used to store memory addresses.
+    public i = -1,
     // 16 bit delay and sound timers
     public soundTimer = 0,
     public delayTimer = 0

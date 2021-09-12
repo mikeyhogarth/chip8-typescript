@@ -1,5 +1,6 @@
 import { decode, findByBytecode } from "./instruction-utils";
 import { instructions } from "./instructions";
+import { InstructionMneumonic } from "./mneumonics";
 
 describe("Instruction decoding", () => {
   // Each item in this list should be an array of length three, with the elements represeting;
@@ -47,6 +48,8 @@ describe("Instruction decoding", () => {
     [0x801e, instructions.shl, { x: 0, y: 1 }],
     // 9xy0 - SNE Vx, Vy
     [0x9010, instructions.sneReg, { x: 0, y: 1 }],
+    // Annn - LD I, addr
+    [0xa123, instructions.loadI, { nnn: 0x123 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

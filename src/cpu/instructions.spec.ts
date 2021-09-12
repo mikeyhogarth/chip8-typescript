@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(20);
+    expect(Object.keys(instructions).length).toEqual(21);
   });
 });
 
@@ -371,6 +371,14 @@ describe("sub", () => {
         instructions.sneReg.execute(cpu, { x: 0, y: 1 });
         expect(cpu.pc).toEqual(0x202);
       });
+    });
+  });
+
+  describe("loadI", () => {
+    it("loads the value nnn into register I", () => {
+      instructions.loadI.execute(cpu, { nnn: 123 });
+      expect(cpu.i).toEqual(123);
+      expect(cpu.pc).toEqual(0x202);
     });
   });
 });
