@@ -42,3 +42,8 @@ export function findByBytecode(opcode: number): Instruction {
     throw new Error("Opcode not matched");
   }
 }
+
+// generate a random number between 0 and 255
+export function random() {
+  return Math.floor(Math.random() * 255);
+}

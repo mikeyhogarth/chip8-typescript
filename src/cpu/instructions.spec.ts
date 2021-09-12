@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(22);
+    expect(Object.keys(instructions).length).toEqual(23);
   });
 });
 
@@ -396,6 +396,29 @@ describe("sub", () => {
         instructions.jmpReg.execute(cpu, { nnn: 0x234 });
         expect(cpu.pc).toEqual(0x235);
       });
+    });
+  });
+});
+
+// Cxkk - RND Vx, byte
+describe("rnd", () => {
+  describe("when the random number is 255", () => {
+    it("sets Vx to a random byte AND'ed with kk.", () => {
+      // this will basically guarentee we get "255" as the random number
+      jest.spyOn(global.Math, "random").mockReturnValue(1);
+      instructions.rnd.execute(cpu, { x: 0, kk: 0b10101010 });
+      expect(cpu.registers[0]).toEqual(0b10101010);
+      jest.spyOn(global.Math, "random").mockRestore();
+    });
+  });
+
+  describe("when the random number is 0", () => {
+    it("doesn't really matter what kk is, because 0 anded with 0 is 0", () => {
+      // this will basically guarentee we get "255" as the random number
+      jest.spyOn(global.Math, "random").mockReturnValue(0);
+      instructions.rnd.execute(cpu, { x: 0, kk: 0b10101010 });
+      expect(cpu.registers[0]).toEqual(0);
+      jest.spyOn(global.Math, "random").mockRestore();
     });
   });
 });

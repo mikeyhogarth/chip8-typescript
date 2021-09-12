@@ -1,4 +1,5 @@
 import { xkkDecoder, nnnDecoder, nullDecoder, xyDecoder } from "./decoders";
+import { random } from "./instruction-utils";
 import { InstructionMneumonic } from "./mneumonics";
 /**
  * list of instructions
@@ -266,6 +267,17 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.pc = nnn + cpu.registers[0];
+    },
+  },
+
+  rnd: {
+    pattern: 0xc000,
+    mask: 0xf000,
+    decodeArgs: xkkDecoder,
+    execute(cpu, args) {
+      const { x, kk } = args as IXKKArgs;
+      cpu.registers[x] = random() & kk;
+      cpu.pc += 2;
     },
   },
 };

@@ -1,8 +1,7 @@
-import { decode, findByBytecode } from "./instruction-utils";
+import { decode, findByBytecode, random } from "./instruction-utils";
 import { instructions } from "./instructions";
-import { InstructionMneumonic } from "./mneumonics";
 
-describe("Instruction decoding", () => {
+describe("instruction utils", () => {
   // Each item in this list should be an array of length three, with the elements represeting;
   // element 0: an opcode
   // element 1: the instrution that opcode should match to
@@ -52,6 +51,8 @@ describe("Instruction decoding", () => {
     [0xa123, instructions.loadI, { nnn: 0x123 }],
     // Bnnn - JP V0, addr
     [0xb123, instructions.jmpReg, { nnn: 0x123 }],
+    // Cxkk - RND Vx, byte
+    [0xc012, instructions.rnd, { x: 0, kk: 0x12 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
@@ -96,6 +97,32 @@ describe("Instruction decoding", () => {
           expect(instruction.decodeArgs(bytecode)).toEqual(args);
         });
       });
+    });
+  });
+});
+
+describe("random", () => {
+  describe("when Math.random returns 1", () => {
+    it("returns 255", () => {
+      jest.spyOn(global.Math, "random").mockReturnValue(1);
+      expect(random()).toEqual(255);
+      jest.spyOn(global.Math, "random").mockRestore();
+    });
+  });
+
+  describe("when Math.random returns 0", () => {
+    it("returns 0", () => {
+      jest.spyOn(global.Math, "random").mockReturnValue(0);
+      expect(random()).toEqual(0);
+      jest.spyOn(global.Math, "random").mockRestore();
+    });
+  });
+
+  describe("when Math.random returns 0.5", () => {
+    it("returns 255/2 floored (127)", () => {
+      jest.spyOn(global.Math, "random").mockReturnValue(0.5);
+      expect(random()).toEqual(127);
+      jest.spyOn(global.Math, "random").mockRestore();
     });
   });
 });
