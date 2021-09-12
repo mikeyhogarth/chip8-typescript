@@ -257,4 +257,15 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Bnnn - JP V0, addr
+  jmpReg: {
+    pattern: 0xb000,
+    mask: 0xf000,
+    decodeArgs: nnnDecoder,
+    execute(cpu, args) {
+      const { nnn } = args as INNNArgs;
+      cpu.pc = nnn + cpu.registers[0];
+    },
+  },
 };

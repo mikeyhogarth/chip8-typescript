@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(21);
+    expect(Object.keys(instructions).length).toEqual(22);
   });
 });
 
@@ -379,6 +379,23 @@ describe("sub", () => {
       instructions.loadI.execute(cpu, { nnn: 123 });
       expect(cpu.i).toEqual(123);
       expect(cpu.pc).toEqual(0x202);
+    });
+  });
+
+  // Bnnn - JP V0, addr
+  describe("jmpReg", () => {
+    describe("when the value of register 0 is 0", () => {
+      it("Jumps to address nnn", () => {
+        instructions.jmpReg.execute(cpu, { nnn: 0x234 });
+        expect(cpu.pc).toEqual(0x234);
+      });
+    });
+    describe("when the value of register 0 is not 0", () => {
+      it("Jumps to address nnn + the value of register 0", () => {
+        cpu.registers[0] = 1;
+        instructions.jmpReg.execute(cpu, { nnn: 0x234 });
+        expect(cpu.pc).toEqual(0x235);
+      });
     });
   });
 });

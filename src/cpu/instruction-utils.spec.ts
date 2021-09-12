@@ -50,6 +50,8 @@ describe("Instruction decoding", () => {
     [0x9010, instructions.sneReg, { x: 0, y: 1 }],
     // Annn - LD I, addr
     [0xa123, instructions.loadI, { nnn: 0x123 }],
+    // Bnnn - JP V0, addr
+    [0xb123, instructions.jmpReg, { nnn: 0x123 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

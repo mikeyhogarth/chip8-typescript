@@ -23,4 +23,5 @@ export enum InstructionMneumonic {
   shl = "shl",
   sneReg = "sneReg",
   loadI = "loadI",
+  jmpReg = "jmpReg",
 }
