@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(29);
+    expect(Object.keys(instructions).length).toEqual(30);
   });
 });
 
@@ -506,6 +506,17 @@ describe("setSound", () => {
     cpu.registers[0] = 0xf0;
     instructions.setSound.execute(cpu, { x: 0 });
     expect(cpu.soundTimer).toEqual(0xf0);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// Fx1E - ADD I, Vx
+describe("addIReg", () => {
+  it("Adds the values of I and Vx, stores result in I.", () => {
+    cpu.registers[0] = 1;
+    cpu.i = 2;
+    instructions.addIReg.execute(cpu, { x: 0 });
+    expect(cpu.i).toEqual(3);
     expect(cpu.pc).toEqual(0x202);
   });
 });

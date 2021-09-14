@@ -31,4 +31,5 @@ export enum InstructionMneumonic {
   waitKey = "waitKey",
   setDelay = "setDelay",
   setSound = "setSound",
+  addIReg = "addIReg",
 }

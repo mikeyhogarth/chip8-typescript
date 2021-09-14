@@ -363,4 +363,16 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Fx1E - ADD I, Vx
+  addIReg: {
+    pattern: 0xf01e,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      cpu.i = cpu.i + cpu.registers[x];
+      cpu.pc += 2;
+    },
+  },
 };
