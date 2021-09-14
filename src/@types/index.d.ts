@@ -3,6 +3,10 @@
  */
 interface IOInterface {
   display: boolean[][];
+  pressedKeys: number;
+  isKeyDown: (key: number) => boolean;
+  keyDown: (key: number) => void;
+  keyUp: (key: number) => void;
   clearDisplay: () => void;
 }
 

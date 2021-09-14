@@ -19,6 +19,61 @@ describe("clearDisplay", () => {
   });
 });
 
+describe("keyDown", () => {
+  it("sets a particular key to the down position", () => {
+    const io = createMemoryIO();
+    io.keyDown(1);
+    io.keyDown(3);
+    expect(io.isKeyDown(1)).toEqual(true);
+    expect(io.isKeyDown(2)).toEqual(false);
+    expect(io.isKeyDown(3)).toEqual(true);
+  });
+});
+
+describe("isKeyDown", () => {
+  it("returns true if a particular key is currently down", () => {
+    const io = createMemoryIO();
+    expect(io.isKeyDown(0)).toEqual(false);
+    io.keyDown(0);
+    expect(io.isKeyDown(0)).toEqual(true);
+  });
+});
+
+describe("keyUp", () => {
+  it("unsets a particular key to the down position", () => {
+    const io = createMemoryIO();
+    io.keyDown(1);
+    io.keyDown(3);
+    io.keyUp(3);
+    expect(io.isKeyDown(1)).toEqual(true);
+    expect(io.isKeyDown(2)).toEqual(false);
+    io.keyUp(2);
+    expect(io.isKeyDown(2)).toEqual(false);
+    expect(io.isKeyDown(3)).toEqual(false);
+    io.keyUp(1);
+    expect(io.isKeyDown(1)).toEqual(false);
+  });
+});
+
+describe("getPressedKeys", () => {
+  describe("when no keys are pressed", () => {
+    it("returns 0", () => {
+      const io = createMemoryIO();
+      expect(io.pressedKeys).toEqual(0);
+    });
+  });
+  describe("when keys are pressed", () => {
+    it("returns a number representing the keys currently pressed", () => {
+      const io = createMemoryIO();
+      io.keyDown(0);
+      io.keyDown(2);
+      io.keyDown(4);
+      io.keyDown(0xf);
+      expect(io.pressedKeys).toEqual(0b1000000000010101);
+    });
+  });
+});
+
 // Utility functions
 function isBlankDisplay(display: boolean[][]) {
   return display.every((row) => row.every((pixel) => pixel === false));
