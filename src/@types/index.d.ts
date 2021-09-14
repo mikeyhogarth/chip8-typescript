@@ -4,6 +4,7 @@
 interface IOInterface {
   display: boolean[][];
   pressedKeys: number;
+  lastKeyPressed: number;
   isKeyDown: (key: number) => boolean;
   keyDown: (key: number) => void;
   keyUp: (key: number) => void;

@@ -74,6 +74,16 @@ describe("getPressedKeys", () => {
   });
 });
 
+describe("lastKeyPressed", () => {
+  it("is set to the value of whatever the last key pressed was", () => {
+    const io = createMemoryIO();
+    io.keyDown(0);
+    io.keyDown(2);
+    io.keyDown(4);
+    expect(io.lastKeyPressed).toEqual(4);
+  });
+});
+
 // Utility functions
 function isBlankDisplay(display: boolean[][]) {
   return display.every((row) => row.every((pixel) => pixel === false));

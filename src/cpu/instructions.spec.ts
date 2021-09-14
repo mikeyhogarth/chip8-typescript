@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(26);
+    expect(Object.keys(instructions).length).toEqual(27);
   });
 });
 
@@ -468,5 +468,24 @@ describe("getDelay", () => {
     instructions.getDelay.execute(cpu, { x: 0 });
     expect(cpu.registers[0]).toEqual(10);
     expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// Fx0A - LD Vx, K
+describe("waitKey", () => {
+  describe("when no key is pressed", () => {
+    it("waits for a key press, does not advance the PC and does not change the register", () => {
+      instructions.waitKey.execute(cpu, { x: 0 });
+      expect(cpu.pc).toEqual(0x200);
+    });
+  });
+
+  describe("when a key is pressed", () => {
+    it("advances the PC, stores pressed key in vX", () => {
+      cpu.io.keyDown(2);
+      instructions.waitKey.execute(cpu, { x: 0 });
+      expect(cpu.pc).toEqual(0x202);
+      expect(cpu.registers[0]).toEqual(2);
+    });
   });
 });

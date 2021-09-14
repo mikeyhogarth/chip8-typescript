@@ -324,4 +324,19 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Fx0A - LD Vx, K
+  waitKey: {
+    pattern: 0xf00a,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      // no pressed keys - do nothing
+      if (cpu.io.pressedKeys === 0) return;
+      // A key is pressed - get the last one pressed and put it into the register
+      cpu.registers[x] = cpu.io.lastKeyPressed;
+      cpu.pc += 2;
+    },
+  },
 };

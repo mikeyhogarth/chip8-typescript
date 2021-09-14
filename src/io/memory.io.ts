@@ -1,8 +1,10 @@
 export function createMemoryIO(): IOInterface {
   return {
     pressedKeys: 0,
+    lastKeyPressed: -1,
     keyDown(key: number) {
       this.pressedKeys = this.pressedKeys + (1 << key);
+      this.lastKeyPressed = key;
     },
     keyUp(key: number) {
       if (this.isKeyDown(key)) this.pressedKeys = this.pressedKeys - (1 << key);
