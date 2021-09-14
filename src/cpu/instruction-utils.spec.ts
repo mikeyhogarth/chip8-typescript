@@ -57,6 +57,8 @@ describe("instruction utils", () => {
     [0xe09e, instructions.skpKey, { x: 0 }],
     // ExA1 - SKNP Vx
     [0xe0a1, instructions.skpNotKey, { x: 0 }],
+    // Fx07 - LD Vx, DT
+    [0xf007, instructions.getDelay, { x: 0 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

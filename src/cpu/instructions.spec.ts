@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(25);
+    expect(Object.keys(instructions).length).toEqual(26);
   });
 });
 
@@ -458,5 +458,15 @@ describe("skpNotKey", () => {
       instructions.skpNotKey.execute(cpu, { x: 0 });
       expect(cpu.pc).toEqual(0x204);
     });
+  });
+});
+
+// Fx07 - LD Vx, DT
+describe("getDelay", () => {
+  it("sets the value of Vx to the current value of the delay timer", () => {
+    cpu.delayTimer = 10;
+    instructions.getDelay.execute(cpu, { x: 0 });
+    expect(cpu.registers[0]).toEqual(10);
+    expect(cpu.pc).toEqual(0x202);
   });
 });

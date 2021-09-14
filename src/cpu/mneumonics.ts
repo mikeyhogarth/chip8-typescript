@@ -27,4 +27,5 @@ export enum InstructionMneumonic {
   rnd = "rnd",
   skpKey = "skpKey",
   skpNotKey = "skpNotKey",
+  getDelay = "getDelay",
 }

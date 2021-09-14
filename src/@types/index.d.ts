@@ -12,6 +12,7 @@ interface IOInterface {
 
 type INNNArgs = { nnn: number };
 type IXYArgs = { x: number; y: number };
+type IXArgs = { x: number };
 type IXKKArgs = { x: number; kk: number };
 type INullArgs = {};
 type InstructionArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;

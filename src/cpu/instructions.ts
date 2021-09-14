@@ -297,7 +297,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     mask: 0xf0ff,
     decodeArgs: xDecoder,
     execute(cpu, args) {
-      const { x } = args as IXKKArgs;
+      const { x } = args as IXArgs;
       cpu.pc += cpu.io.isKeyDown(cpu.registers[x]) ? 4 : 2;
     },
   },
@@ -308,8 +308,20 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     mask: 0xf0ff,
     decodeArgs: xDecoder,
     execute(cpu, args) {
-      const { x } = args as IXKKArgs;
+      const { x } = args as IXArgs;
       cpu.pc += cpu.io.isKeyDown(cpu.registers[x]) ? 2 : 4;
+    },
+  },
+
+  // Fx07 - LD Vx, DT
+  getDelay: {
+    pattern: 0xf007,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      cpu.registers[x] = cpu.delayTimer;
+      cpu.pc += 2;
     },
   },
 };
