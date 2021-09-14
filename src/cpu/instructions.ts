@@ -288,6 +288,9 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     },
   },
 
+  // Dxyn - DRW Vx, Vy, nibble
+  // TODO
+
   // Ex9E - SKP Vx
   skpKey: {
     pattern: 0xe09e,

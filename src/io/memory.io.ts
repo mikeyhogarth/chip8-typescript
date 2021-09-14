@@ -10,9 +10,6 @@ export function createMemoryIO(): IOInterface {
     isKeyDown(key: number): boolean {
       return ((this.pressedKeys >> key) & 1) === 1;
     },
-    getPressedKeys(): number {
-      return this.pressedKeys;
-    },
     display: createBlankDisplay(),
     clearDisplay() {
       this.display = createBlankDisplay();
