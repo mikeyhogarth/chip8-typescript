@@ -1,5 +1,6 @@
 export function createMemoryIO(): IOInterface {
   return {
+    /** Keyboard */
     pressedKeys: 0,
     lastKeyPressed: -1,
     keyDown(key: number) {
@@ -12,6 +13,8 @@ export function createMemoryIO(): IOInterface {
     isKeyDown(key: number): boolean {
       return ((this.pressedKeys >> key) & 1) === 1;
     },
+
+    /** Display */
     display: createBlankDisplay(),
     clearDisplay() {
       this.display = createBlankDisplay();
