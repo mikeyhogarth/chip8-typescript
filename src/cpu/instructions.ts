@@ -332,10 +332,22 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: xDecoder,
     execute(cpu, args) {
       const { x } = args as IXArgs;
-      // no pressed keys - do nothing
+      // no pressed keys - do nothing and return
       if (cpu.io.pressedKeys === 0) return;
       // A key is pressed - get the last one pressed and put it into the register
       cpu.registers[x] = cpu.io.lastKeyPressed;
+      cpu.pc += 2;
+    },
+  },
+
+  // Fx15 - LD DT, Vx
+  setDelay: {
+    pattern: 0xf015,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      cpu.delayTimer = cpu.registers[0];
       cpu.pc += 2;
     },
   },
