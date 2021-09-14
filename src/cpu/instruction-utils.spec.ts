@@ -63,6 +63,8 @@ describe("instruction utils", () => {
     [0xf00a, instructions.waitKey, { x: 0 }],
     // Fx15 - LD DT, Vx
     [0xf015, instructions.setDelay, { x: 0 }],
+    // Fx18 - LD ST, Vx
+    [0xf018, instructions.setSound, { x: 0 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

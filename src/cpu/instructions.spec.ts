@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(28);
+    expect(Object.keys(instructions).length).toEqual(29);
   });
 });
 
@@ -496,6 +496,16 @@ describe("setDelay", () => {
     cpu.registers[0] = 0xf0;
     instructions.setDelay.execute(cpu, { x: 0 });
     expect(cpu.delayTimer).toEqual(0xf0);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// Fx18 - LD ST, Vx
+describe("setSound", () => {
+  it("sets the sound timer to the value of Vx", () => {
+    cpu.registers[0] = 0xf0;
+    instructions.setSound.execute(cpu, { x: 0 });
+    expect(cpu.soundTimer).toEqual(0xf0);
     expect(cpu.pc).toEqual(0x202);
   });
 });

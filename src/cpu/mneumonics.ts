@@ -30,4 +30,5 @@ export enum InstructionMneumonic {
   getDelay = "getDelay",
   waitKey = "waitKey",
   setDelay = "setDelay",
+  setSound = "setSound",
 }

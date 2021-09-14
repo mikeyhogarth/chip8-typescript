@@ -351,4 +351,16 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Fx18 - LD ST, Vx
+  setSound: {
+    pattern: 0xf018,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      cpu.soundTimer = cpu.registers[0];
+      cpu.pc += 2;
+    },
+  },
 };
