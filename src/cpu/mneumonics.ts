@@ -25,4 +25,5 @@ export enum InstructionMneumonic {
   loadI = "loadI",
   jmpReg = "jmpReg",
   rnd = "rnd",
+  skpKey = "skpKey",
 }

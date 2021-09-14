@@ -1,4 +1,10 @@
-import { xkkDecoder, nnnDecoder, nullDecoder, xyDecoder } from "./decoders";
+import {
+  xkkDecoder,
+  nnnDecoder,
+  nullDecoder,
+  xDecoder,
+  xyDecoder,
+} from "./decoders";
 import { random } from "./instruction-utils";
 import { InstructionMneumonic } from "./mneumonics";
 /**
@@ -270,6 +276,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     },
   },
 
+  // Cxkk - RND Vx, byte
   rnd: {
     pattern: 0xc000,
     mask: 0xf000,
@@ -278,6 +285,17 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = random() & kk;
       cpu.pc += 2;
+    },
+  },
+
+  // Ex9E - SKP Vx
+  skpKey: {
+    pattern: 0xe09e,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXKKArgs;
+      cpu.pc += cpu.io.isKeyDown(cpu.registers[x]) ? 4 : 2;
     },
   },
 };

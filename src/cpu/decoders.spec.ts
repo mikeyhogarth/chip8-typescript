@@ -1,4 +1,10 @@
-import { nnnDecoder, nullDecoder, xkkDecoder, xyDecoder } from "./decoders";
+import {
+  nnnDecoder,
+  nullDecoder,
+  xkkDecoder,
+  xyDecoder,
+  xDecoder,
+} from "./decoders";
 
 describe("nullDecoder", () => {
   it("returns zero args", () => {
@@ -24,5 +30,12 @@ describe("xyDecoder", () => {
   it("returns the x and y portion of the opcode", () => {
     expect(xyDecoder(0x5120)).toEqual({ x: 1, y: 2 });
     expect(xyDecoder(0x8210)).toEqual({ x: 2, y: 1 });
+  });
+});
+
+describe("xDecoder", () => {
+  it("returns the x portion of the opcode", () => {
+    expect(xDecoder(0x5120)).toEqual({ x: 1 });
+    expect(xDecoder(0x8210)).toEqual({ x: 2 });
   });
 });

@@ -53,6 +53,8 @@ describe("instruction utils", () => {
     [0xb123, instructions.jmpReg, { nnn: 0x123 }],
     // Cxkk - RND Vx, byte
     [0xc012, instructions.rnd, { x: 0, kk: 0x12 }],
+    // Ex9E - SKP Vx
+    [0xe09e, instructions.skpKey, { x: 0 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

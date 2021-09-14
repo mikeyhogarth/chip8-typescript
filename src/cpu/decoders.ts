@@ -36,3 +36,12 @@ export function xyDecoder(opcode: number) {
   const xy = (opcode & 0x0ff0) >> 4;
   return { x: xy >> 4, y: xy & 0x0f };
 }
+
+/**
+ * Decode arguments from opcodes of format X
+ * @param opcode
+ * @returns
+ */
+export function xDecoder(opcode: number) {
+  return { x: (opcode & 0x0f00) >> 8 };
+}

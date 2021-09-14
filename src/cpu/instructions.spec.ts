@@ -13,7 +13,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(23);
+    expect(Object.keys(instructions).length).toEqual(24);
   });
 });
 
@@ -419,6 +419,25 @@ describe("rnd", () => {
       instructions.rnd.execute(cpu, { x: 0, kk: 0b10101010 });
       expect(cpu.registers[0]).toEqual(0);
       jest.spyOn(global.Math, "random").mockRestore();
+    });
+  });
+});
+
+// Ex9E - SKP Vx
+describe("skpKey", () => {
+  describe("when the key indicated by Vx is pressed", () => {
+    it("skips the next instruction", () => {
+      cpu.io.keyDown(1);
+      cpu.registers[0] = 1;
+      instructions.skpKey.execute(cpu, { x: 0 });
+      expect(cpu.pc).toEqual(0x204);
+    });
+  });
+  describe("when the key indicated by Vx is NOT pressed", () => {
+    it("does not skip the next instruction", () => {
+      cpu.registers[0] = 1;
+      instructions.skpKey.execute(cpu, { x: 0 });
+      expect(cpu.pc).toEqual(0x202);
     });
   });
 });
