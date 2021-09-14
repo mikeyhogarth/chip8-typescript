@@ -301,4 +301,15 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += cpu.io.isKeyDown(cpu.registers[x]) ? 4 : 2;
     },
   },
+
+  // ExA1 - SKNP Vx
+  skpNotKey: {
+    pattern: 0xe0a1,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXKKArgs;
+      cpu.pc += cpu.io.isKeyDown(cpu.registers[x]) ? 2 : 4;
+    },
+  },
 };
