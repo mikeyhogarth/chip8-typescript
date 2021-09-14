@@ -16,7 +16,7 @@ type IXYArgs = { x: number; y: number };
 type IXArgs = { x: number };
 type IXKKArgs = { x: number; kk: number };
 type INullArgs = {};
-type InstructionArgs = INNNArgs | IXYArgs | IXKKArgs | INullArgs;
+type InstructionArgs = INNNArgs | IXYArgs | IXArgs | IXKKArgs | INullArgs;
 
 interface Instruction {
   execute: (cpu: ICpu, args?: InstructionArgs) => void;
