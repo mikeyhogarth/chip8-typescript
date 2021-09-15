@@ -2,13 +2,15 @@
  * IO Interface
  */
 interface IOInterface {
-  display: boolean[][];
+  display: number[][];
   pressedKeys: number;
   lastKeyPressed: number;
   isKeyDown: (key: number) => boolean;
   keyDown: (key: number) => void;
   keyUp: (key: number) => void;
   clearDisplay: () => void;
+  drawSprite: (sprite: number[], x: number, y: number) => boolean;
+  drawPixel: (value: number, x: number, y: number) => boolean;
 }
 
 type INNNArgs = { nnn: number };

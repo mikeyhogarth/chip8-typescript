@@ -1,4 +1,5 @@
 import { createMemoryIO } from "./memory.io";
+import hexSprites from "../hex-sprites";
 
 describe("createMemoryIo", () => {
   it("initializes an empty 32 x 64 array", () => {
@@ -12,7 +13,7 @@ describe("createMemoryIo", () => {
 describe("clearDisplay", () => {
   it("blanks out the display", () => {
     const io = createMemoryIO();
-    io.display[0][0] = true;
+    io.display[0][0] = 1;
     expect(isBlankDisplay(io.display)).toEqual(false);
     io.clearDisplay();
     expect(isBlankDisplay(io.display)).toEqual(true);
@@ -84,7 +85,112 @@ describe("lastKeyPressed", () => {
   });
 });
 
+describe("drawPixel", () => {
+  describe("when the pixel is off to begin with", () => {
+    let io: IOInterface;
+
+    beforeEach(() => {
+      io = createMemoryIO();
+    });
+    describe("when the pixel is set to 1", () => {
+      it("draws a pixel at the x/y co-ordinate and returns false (because no pixel was 'erased')", () => {
+        const result = io.drawPixel(1, 0, 0);
+        expect(io.display[0][0]).toEqual(1);
+        expect(result).toEqual(false);
+      });
+    });
+    describe("when the pixel is set to 0", () => {
+      it("does not draw a pixel at the x/y co-ordinate and returns false (because no pixel was 'erased')", () => {
+        const result = io.drawPixel(0, 0, 0);
+        expect(io.display[0][0]).toEqual(0);
+        expect(result).toEqual(false);
+      });
+    });
+  });
+
+  describe("when the pixel is on to begin with", () => {
+    let io: IOInterface;
+
+    beforeEach(() => {
+      io = createMemoryIO();
+      io.display[0][0] = 1;
+    });
+    describe("when the pixel is set to 1", () => {
+      it("erases the pixel at the x/y co-ordinate and returns true (because the pixel was 'erased')", () => {
+        const result = io.drawPixel(1, 0, 0);
+        expect(io.display[0][0]).toEqual(0);
+        expect(result).toEqual(true);
+      });
+    });
+    describe("when the pixel is set to 0", () => {
+      it("Leaves the pixel at x/y alone and returns false (because no pixel was 'erased')", () => {
+        const result = io.drawPixel(0, 0, 0);
+        expect(io.display[0][0]).toEqual(1);
+        expect(result).toEqual(false);
+      });
+    });
+  });
+});
+
+describe("drawSprite", () => {
+  describe("on a blank screen", () => {
+    let io: IOInterface;
+
+    beforeEach(() => {
+      io = createMemoryIO();
+    });
+
+    describe("when drawn at 0, 0", () => {
+      it("Simply draws the sprite at the appropriate co-ordinate", () => {
+        const zero = hexSprites[0];
+        const result = io.drawSprite(zero, 0, 0);
+        // printScreen(io.display);
+        expect(io.display).toMatchSnapshot();
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe("when drawn at 61, 29", () => {
+      it("Wraps the x/y around to the other side of the screen", () => {
+        const zero = hexSprites[0];
+        const result = io.drawSprite(zero, 61, 29);
+        // printScreen(io.display);
+        expect(io.display).toMatchSnapshot();
+        expect(result).toEqual(false);
+      });
+    });
+  });
+
+  describe("on a non-blank screen", () => {
+    let io: IOInterface;
+
+    beforeEach(() => {
+      io = createMemoryIO();
+      // fill first row with pixels
+      io.display[0].fill(1);
+    });
+
+    describe("when drawn at 0, 0", () => {
+      it("Simply draws the sprite at the appropriate co-ordinate", () => {
+        const zero = hexSprites[0];
+        const result = io.drawSprite(zero, 0, 0);
+        // printScreen(io.display);
+        expect(io.display).toMatchSnapshot();
+        expect(result).toEqual(true);
+      });
+    });
+  });
+});
+
 // Utility functions
-function isBlankDisplay(display: boolean[][]) {
-  return display.every((row) => row.every((pixel) => pixel === false));
+function isBlankDisplay(display: number[][]) {
+  return display.every((row) => row.every((pixel) => pixel === 0));
+}
+
+// for debugging sprites
+function printScreen(screen: number[][]) {
+  let str = "";
+  screen.forEach((row) => (str = str + row.join("") + "\n"));
+  /* tslint:disable-next-line */
+  console.log(str);
 }
