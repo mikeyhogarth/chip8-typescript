@@ -55,6 +55,8 @@ describe("instruction utils", () => {
     [0xc012, instructions.rnd, { x: 0, kk: 0x12 }],
     // Ex9E - SKP Vx
     [0xe09e, instructions.skpKey, { x: 0 }],
+    // Dxyn - DRW Vx, Vy, nibble
+    [0xd012, instructions.draw, { x: 0, y: 1, n: 2 }],
     // ExA1 - SKNP Vx
     [0xe0a1, instructions.skpNotKey, { x: 0 }],
     // Fx07 - LD Vx, DT

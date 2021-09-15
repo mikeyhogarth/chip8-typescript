@@ -35,7 +35,7 @@ export function createMemoryIO(): IOInterface {
      * @param x
      * @param y
      */
-    drawSprite(sprite: number[], x: number, y: number): boolean {
+    drawSprite(sprite: Uint8Array, x: number, y: number): boolean {
       let collided: boolean = false;
       sprite.forEach((row, rowNumber) => {
         for (let i = 0; i < 8; i++) {

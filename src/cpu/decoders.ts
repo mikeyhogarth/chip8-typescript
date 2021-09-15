@@ -45,3 +45,13 @@ export function xyDecoder(opcode: number) {
 export function xDecoder(opcode: number) {
   return { x: (opcode & 0x0f00) >> 8 };
 }
+
+/**
+ * Decode arguments from opcodes of format XYN
+ * @param opcode
+ * @returns
+ */
+export function xynDecoder(opcode: number) {
+  const xyn = opcode & 0x0fff;
+  return { x: xyn >> 8, y: (xyn & 0x0f0) >> 4, n: xyn & 0x00f };
+}

@@ -9,16 +9,23 @@ interface IOInterface {
   keyDown: (key: number) => void;
   keyUp: (key: number) => void;
   clearDisplay: () => void;
-  drawSprite: (sprite: number[], x: number, y: number) => boolean;
+  drawSprite: (sprite: Uint8Array, x: number, y: number) => boolean;
   drawPixel: (value: number, x: number, y: number) => boolean;
 }
 
 type INNNArgs = { nnn: number };
+type IXYNArgs = { x: number; y: number; n: number };
 type IXYArgs = { x: number; y: number };
 type IXArgs = { x: number };
 type IXKKArgs = { x: number; kk: number };
 type INullArgs = {};
-type InstructionArgs = INNNArgs | IXYArgs | IXArgs | IXKKArgs | INullArgs;
+type InstructionArgs =
+  | INNNArgs
+  | IXYArgs
+  | IXYNArgs
+  | IXArgs
+  | IXKKArgs
+  | INullArgs;
 
 interface Instruction {
   execute: (cpu: ICpu, args?: InstructionArgs) => void;

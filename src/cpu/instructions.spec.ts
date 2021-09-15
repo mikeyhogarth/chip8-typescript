@@ -1,6 +1,7 @@
 import { instructions } from "./instructions";
 import { createCpu } from "../cpu";
 import { createMemoryIO } from "../io/memory.io";
+import hexSprites from "../hex-sprites";
 
 let cpu: ICpu;
 
@@ -13,7 +14,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(30);
+    expect(Object.keys(instructions).length).toEqual(31);
   });
 });
 
@@ -420,6 +421,40 @@ describe("rnd", () => {
       expect(cpu.registers[0]).toEqual(0);
       jest.spyOn(global.Math, "random").mockRestore();
     });
+  });
+});
+
+// for debugging sprites
+function printScreen(screen: number[][]) {
+  let str = "";
+  screen.forEach((row) => (str = str + row.join("") + "\n"));
+  /* tslint:disable-next-line */
+  console.log(str);
+}
+
+// Dxyn - DRW Vx, Vy, nibble
+describe("draw", () => {
+  it("draws the sprite on the screen", () => {
+    const spy = jest.spyOn(cpu.io, "drawSprite");
+
+    // load the hex sprite for "Zero" into memory
+    const sprite = hexSprites[2];
+    cpu.i = 0x020;
+    sprite.forEach((byte, idx) => {
+      cpu.memory[cpu.i + idx] = byte;
+    });
+
+    // set the resiters to 10,10 (x, y)
+    cpu.registers[0] = 10;
+    cpu.registers[1] = 10;
+    instructions.draw.execute(cpu, { x: 0, y: 0, n: sprite.length });
+
+    // printScreen(cpu.io.display);
+    expect(cpu.io.drawSprite).toHaveBeenCalledWith(sprite, 10, 10);
+    expect(cpu.pc).toEqual(0x202);
+    expect(cpu.io.display).toMatchSnapshot();
+
+    spy.mockRestore();
   });
 });
 

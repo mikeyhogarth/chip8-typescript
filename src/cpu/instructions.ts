@@ -4,6 +4,7 @@ import {
   nullDecoder,
   xDecoder,
   xyDecoder,
+  xynDecoder,
 } from "./decoders";
 import { random } from "./instruction-utils";
 import { InstructionMneumonic } from "./mneumonics";
@@ -289,7 +290,21 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
   },
 
   // Dxyn - DRW Vx, Vy, nibble
-  // TODO
+  draw: {
+    pattern: 0xd000,
+    mask: 0xf000,
+    decodeArgs: xynDecoder,
+    execute(cpu, args) {
+      const { x, y, n } = args as IXYNArgs;
+
+      cpu.io.drawSprite(
+        cpu.memory.slice(cpu.i, cpu.i + n),
+        cpu.registers[x],
+        cpu.registers[y]
+      );
+      cpu.pc += 2;
+    },
+  },
 
   // Ex9E - SKP Vx
   skpKey: {
