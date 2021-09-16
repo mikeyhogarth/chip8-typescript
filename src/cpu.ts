@@ -25,7 +25,7 @@ export class Cpu implements ICpu {
     public soundTimer = 0,
     public delayTimer = 0
   ) {
-    // Load hex-sprites into memory
+    // Load hex-sprites into memory (there are 15 of these, starting at memory position 0)
     for (let sprite = 0; sprite <= 0xf; sprite++) {
       for (let byte = 0; byte <= 4; byte++) {
         memory[sprite * 5 + byte] = hexSprites[sprite][byte];
