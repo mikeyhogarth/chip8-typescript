@@ -297,11 +297,13 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, y, n } = args as IXYNArgs;
 
-      cpu.io.drawSprite(
+      cpu.registers[0xf] = cpu.io.drawSprite(
         cpu.memory.slice(cpu.i, cpu.i + n),
         cpu.registers[x],
         cpu.registers[y]
-      );
+      )
+        ? 1
+        : 0;
       cpu.pc += 2;
     },
   },

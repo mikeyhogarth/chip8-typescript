@@ -434,27 +434,57 @@ function printScreen(screen: number[][]) {
 
 // Dxyn - DRW Vx, Vy, nibble
 describe("draw", () => {
-  it("draws the sprite on the screen", () => {
-    const spy = jest.spyOn(cpu.io, "drawSprite");
+  describe("when there is no collission", () => {
+    it("draws the sprite on the screen, sets Vf to 0", () => {
+      const spy = jest.spyOn(cpu.io, "drawSprite");
 
-    // load the hex sprite for "Zero" into memory
-    const sprite = hexSprites[2];
-    cpu.i = 0x020;
-    sprite.forEach((byte, idx) => {
-      cpu.memory[cpu.i + idx] = byte;
+      // load the hex sprite for "Zero" into memory
+      const sprite = hexSprites[2];
+      cpu.i = 0x020;
+      sprite.forEach((byte, idx) => {
+        cpu.memory[cpu.i + idx] = byte;
+      });
+
+      // set the resiters to 10,10 (x, y)
+      cpu.registers[0] = 10;
+      cpu.registers[1] = 10;
+      instructions.draw.execute(cpu, { x: 0, y: 0, n: sprite.length });
+
+      // printScreen(cpu.io.display);
+      expect(cpu.io.drawSprite).toHaveBeenCalledWith(sprite, 10, 10);
+      expect(cpu.pc).toEqual(0x202);
+      expect(cpu.io.display).toMatchSnapshot();
+      expect(cpu.registers[0xf]).toEqual(0);
+      spy.mockRestore();
     });
+  });
+  describe("when this causes a collission", () => {
+    it("draws the sprite on the screen, sets Vf to 1", () => {
+      const spy = jest.spyOn(cpu.io, "drawSprite");
 
-    // set the resiters to 10,10 (x, y)
-    cpu.registers[0] = 10;
-    cpu.registers[1] = 10;
-    instructions.draw.execute(cpu, { x: 0, y: 0, n: sprite.length });
+      // load the hex sprite for "Zero" into memory
+      const sprite = hexSprites[0];
+      cpu.i = 0x020;
+      sprite.forEach((byte, idx) => {
+        cpu.memory[cpu.i + idx] = byte;
+      });
 
-    // printScreen(cpu.io.display);
-    expect(cpu.io.drawSprite).toHaveBeenCalledWith(sprite, 10, 10);
-    expect(cpu.pc).toEqual(0x202);
-    expect(cpu.io.display).toMatchSnapshot();
-
-    spy.mockRestore();
+      // set the resiters to 10,10 (x, y)
+      cpu.registers[0] = 8;
+      cpu.registers[1] = 8;
+      instructions.draw.execute(cpu, { x: 0, y: 0, n: sprite.length });
+      expect(cpu.io.drawSprite).toHaveBeenCalledWith(sprite, 8, 8);
+      expect(cpu.pc).toEqual(0x202);
+      cpu.registers[0] = 10;
+      cpu.registers[1] = 10;
+      instructions.draw.execute(cpu, { x: 0, y: 0, n: sprite.length });
+      expect(cpu.io.drawSprite).toHaveBeenCalledWith(sprite, 10, 10);
+      expect(cpu.pc).toEqual(0x204);
+      // printScreen(cpu.io.display);
+      expect(cpu.io.display).toMatchSnapshot();
+      expect(cpu.registers[0xf]).toEqual(1);
+      spy.mockRestore();
+    });
   });
 });
 
