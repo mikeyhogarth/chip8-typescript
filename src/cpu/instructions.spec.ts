@@ -14,7 +14,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(31);
+    expect(Object.keys(instructions).length).toEqual(32);
   });
 });
 
@@ -583,5 +583,18 @@ describe("addIReg", () => {
     instructions.addIReg.execute(cpu, { x: 0 });
     expect(cpu.i).toEqual(3);
     expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// Fx29 - LD F, Vx
+describe("loadHexSprite", () => {
+  it("sets I to be the location of the hex sprite in Vx", () => {
+    cpu.registers[0] = 0xf;
+    instructions.loadHexSprite.execute(cpu, { x: 0 });
+    expect(cpu.i).toEqual(0x4b);
+    expect(cpu.pc).toEqual(0x202);
+    for (let i = 0; i < 5; i++) {
+      expect(hexSprites[0xf][i]).toEqual(cpu.memory[cpu.i + i]);
+    }
   });
 });

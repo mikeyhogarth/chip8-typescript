@@ -33,4 +33,5 @@ export enum InstructionMneumonic {
   setSound = "setSound",
   addIReg = "addIReg",
   draw = "draw",
+  loadHexSprite = "loadHexSprite",
 }

@@ -8,6 +8,8 @@ import {
 } from "./decoders";
 import { random } from "./instruction-utils";
 import { InstructionMneumonic } from "./mneumonics";
+import hexSprites from "../hex-sprites";
+
 /**
  * list of instructions
  */
@@ -389,6 +391,18 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x } = args as IXArgs;
       cpu.i = cpu.i + cpu.registers[x];
+      cpu.pc += 2;
+    },
+  },
+
+  // Fx29 - LD F, Vx
+  loadHexSprite: {
+    pattern: 0xf029,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      cpu.i = cpu.registers[x] * 5;
       cpu.pc += 2;
     },
   },

@@ -1,6 +1,6 @@
 import { decode } from "./cpu/instruction-utils";
 import { createMemoryIO } from "./io/memory.io";
-import { InstructionMneumonic } from "./cpu/mneumonics";
+import hexSprites from "./hex-sprites";
 
 // The first 0x1FF bytes of memory are reserved for the CHIP8 interpreter, so all
 // CHIP8 programs start at 0x200.
@@ -24,7 +24,14 @@ export class Cpu implements ICpu {
     // 16 bit delay and sound timers
     public soundTimer = 0,
     public delayTimer = 0
-  ) {}
+  ) {
+    // Load hex-sprites into memory
+    for (let sprite = 0; sprite <= 0xf; sprite++) {
+      for (let byte = 0; byte <= 4; byte++) {
+        memory[sprite * 5 + byte] = hexSprites[sprite][byte];
+      }
+    }
+  }
 
   /**
    *

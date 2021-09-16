@@ -3,6 +3,7 @@ import * as utils from "./cpu/instruction-utils";
 import * as fs from "fs";
 import * as path from "path";
 import { instructions } from "./cpu/instructions";
+import hexSprites from "./hex-sprites";
 
 let cpu: ICpu;
 beforeEach(() => {
@@ -24,6 +25,13 @@ describe("createCpu", () => {
     expect(cpu.sp).toEqual(-1);
     expect(cpu.soundTimer).toEqual(0);
     expect(cpu.delayTimer).toEqual(0);
+
+    // check the hex sprites are in memory
+    for (let i = 0; i <= 0xf; i++) {
+      for (let j = 0; j < 5; j++) {
+        expect(cpu.memory[i * 5 + j]).toEqual(hexSprites[i][j]);
+      }
+    }
   });
 });
 
