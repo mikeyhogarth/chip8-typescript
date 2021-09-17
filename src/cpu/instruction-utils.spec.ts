@@ -71,6 +71,8 @@ describe("instruction utils", () => {
     [0xf01e, instructions.addIReg, { x: 0 }],
     // Fx29 - LD F, Vx
     [0xf029, instructions.loadHexSprite, { x: 0 }],
+    // Fx33 - LD B, Vx
+    [0xf033, instructions.loadBCD, { x: 0 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered

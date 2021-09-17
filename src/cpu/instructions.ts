@@ -406,4 +406,21 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Fx33 - LD B, Vx
+  loadBCD: {
+    pattern: 0xf033,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      // hundreds
+      cpu.memory[cpu.i] = Math.floor(cpu.registers[x] / 100);
+      // tens
+      cpu.memory[cpu.i + 1] = Math.floor(cpu.registers[x] / 10) % 10;
+      // units
+      cpu.memory[cpu.i + 2] = cpu.registers[x] % 10;
+      cpu.pc += 2;
+    },
+  },
 };
