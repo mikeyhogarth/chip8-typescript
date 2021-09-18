@@ -10,11 +10,8 @@ beforeEach(() => {
 });
 
 describe("instructions", () => {
-  it("is as long as it should be", () => {
-    // There are 35 opcodes in chip8 - this test is purely here as a
-    // gauge to figure out how far along the project is, but will eventually
-    // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(34);
+  it("implements all CHIP8 35 opcodes", () => {
+    expect(Object.keys(instructions).length).toEqual(35);
   });
 });
 
@@ -634,12 +631,12 @@ describe("loadBCD", () => {
 describe("storeMem", () => {
   it("stores the values of all the registers in memory, starting at I", () => {
     const x = 4;
+    cpu.i = 0x300;
     for (let i = 0; i <= x; i++) {
       cpu.registers[i] = Math.floor(Math.random() * 100);
     }
-    cpu.i = 0x300;
 
-    instructions.storeMem.execute(cpu, { x: 4 });
+    instructions.storeMem.execute(cpu, { x });
 
     for (let i = 0; i <= x; i++) {
       expect(cpu.memory[cpu.i + i]).toEqual(cpu.registers[i]);
@@ -648,6 +645,27 @@ describe("storeMem", () => {
     // Check that the memory immediately before and after has not been affected
     expect(cpu.memory[cpu.i - 1]).toEqual(0);
     expect(cpu.memory[cpu.i + x + 1]).toEqual(0);
+    expect(cpu.pc).toEqual(0x202);
+  });
+});
+
+// Fx65 - LD Vx, [I]
+describe("readMem", () => {
+  it("reads the values from memory from i to x and puts them into registers", () => {
+    const x = 4;
+    cpu.i = 0x300;
+    for (let i = 0; i <= x; i++) {
+      cpu.memory[cpu.i + i] = Math.floor(Math.random() * 100);
+    }
+
+    instructions.readMem.execute(cpu, { x });
+
+    for (let i = 0; i <= x; i++) {
+      expect(cpu.registers[i]).toEqual(cpu.memory[cpu.i + i]);
+    }
+
+    // check it stopped at the right register
+    expect(cpu.registers[x + 1]).toEqual(0);
     expect(cpu.pc).toEqual(0x202);
   });
 });
