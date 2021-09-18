@@ -23,7 +23,8 @@ export class Cpu implements ICpu {
     public i = -1,
     // 16 bit delay and sound timers
     public soundTimer = 0,
-    public delayTimer = 0
+    public delayTimer = 0,
+    private _timerId?: ReturnType<typeof setInterval>
   ) {
     // Load hex-sprites into memory (there are 15 of these, starting at memory position 0)
     for (let sprite = 0; sprite <= 0xf; sprite++) {
@@ -31,6 +32,19 @@ export class Cpu implements ICpu {
         memory[sprite * 5 + byte] = hexSprites[sprite][byte];
       }
     }
+    // start up the interval for the sound/delay timers
+    this._timerId = setInterval(() => this._advanceTimer, 1);
+  }
+
+  // Dispose of CPU properly
+  destroy() {
+    if (this._timerId) clearInterval(this._timerId);
+  }
+
+  // Reduce sound and delay timers by one (this runs on each timer tick)
+  _advanceTimer() {
+    if (this.soundTimer > 0) this.soundTimer = this.soundTimer - 1;
+    if (this.delayTimer > 0) this.delayTimer = this.delayTimer - 1;
   }
 
   /**

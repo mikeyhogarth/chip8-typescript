@@ -54,11 +54,18 @@ interface ICpu {
   delayTimer: number;
   soundTimer: number;
 
+  // dispose cleanly
+  destroy: () => void;
+
   // load data into memory
   load: (data: Buffer) => void;
 
   // The IO interface
   io: IOInterface;
+
+  // The timer
+  _timerId?: ReturnType<typeof setInterval>;
+  _advanceTimer: () => void;
 
   // FDE cycle
   fetch: () => number;
