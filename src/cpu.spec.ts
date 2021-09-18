@@ -16,23 +16,6 @@ describe("Cpu", () => {
   });
 });
 
-describe("_advanceTimer", () => {
-  it("reduces the sound and delay timers by 1", () => {
-    cpu.soundTimer = 10;
-    cpu.delayTimer = 9;
-    cpu._advanceTimer();
-    expect(cpu.soundTimer).toEqual(9);
-    expect(cpu.delayTimer).toEqual(8);
-  });
-});
-
-describe("destroy", () => {
-  it("disposes of the timer properly", () => {
-    cpu.destroy();
-    expect(clearInterval).toHaveBeenCalledTimes(1);
-    expect(clearInterval).toHaveBeenCalledWith(cpu._timerId);
-  });
-});
 
 describe("createCpu", () => {
   it("returns a valid, fresh CPU", () => {
@@ -105,6 +88,14 @@ describe("execute", () => {
     cpu.execute(instruction, { x, kk });
     expect(cpu.registers[x]).toEqual(kk);
   });
+
+  it("reduces the delay and sound timers by 1",() => {
+    cpu.soundTimer = 10;
+    cpu.delayTimer = 9;
+    cpu.execute(instructions.load, { x: 0, kk: 0xf0 });
+    expect(cpu.soundTimer).toEqual(9);
+    expect(cpu.delayTimer).toEqual(8);
+  })
 });
 
 describe("cycle", () => {
