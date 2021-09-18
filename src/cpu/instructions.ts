@@ -20,7 +20,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     mask: 0xf000,
     decodeArgs: nnnDecoder,
     execute: (cpu) => {
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -31,7 +31,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     decodeArgs: nullDecoder,
     execute(cpu) {
       cpu.io.clearDisplay();
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -68,7 +68,9 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { nnn } = args as INNNArgs;
       cpu.sp++;
-      cpu.stack[cpu.sp] = cpu.pc;
+      // Note: the COWGOD guide mentions nothing of this +2 - we are meant to infer this
+      // because without it the program would go into a neverending infinite loop.
+      cpu.stack[cpu.sp] = cpu.pc + 2;
       cpu.pc = nnn;
     },
   },
@@ -115,7 +117,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = kk;
 
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -127,7 +129,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, kk } = args as IXKKArgs;
       cpu.registers[x] = cpu.registers[x] + kk;
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -139,7 +141,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.registers[x] = cpu.registers[y];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -151,7 +153,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.registers[x] = cpu.registers[x] | cpu.registers[y];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -163,7 +165,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.registers[x] = cpu.registers[x] & cpu.registers[y];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -175,7 +177,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
     execute(cpu, args) {
       const { x, y } = args as IXYArgs;
       cpu.registers[x] = cpu.registers[x] ^ cpu.registers[y];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -189,7 +191,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const sum = cpu.registers[x] + cpu.registers[y];
       cpu.registers[0xf] = sum > 0xff ? 1 : 0;
       cpu.registers[x] = sum;
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -202,7 +204,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x, y } = args as IXYArgs;
       cpu.registers[0xf] = cpu.registers[x] > cpu.registers[y] ? 1 : 0;
       cpu.registers[x] = cpu.registers[x] - cpu.registers[y];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -228,7 +230,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x, y } = args as IXYArgs;
       cpu.registers[0xf] = cpu.registers[y] > cpu.registers[x] ? 1 : 0;
       cpu.registers[x] = cpu.registers[y] - cpu.registers[x];
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 
@@ -241,7 +243,7 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       const { x } = args as IXYArgs;
       cpu.registers[0xf] = cpu.registers[x] >> 7; // >> 7 gets us the MSB in a byte
       cpu.registers[x] = cpu.registers[x] << 1;
-      cpu.pc += 0x2;
+      cpu.pc += 2;
     },
   },
 

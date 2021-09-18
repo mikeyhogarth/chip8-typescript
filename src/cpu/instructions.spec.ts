@@ -68,7 +68,7 @@ describe("call", () => {
   it("Increments the stack pointer, then puts the current PC on the top of the stack. The PC is then set to nnn.", () => {
     instructions.call.execute(cpu, { nnn: 0xf00 });
     expect(cpu.sp).toEqual(0);
-    expect(cpu.stack[cpu.sp]).toEqual(0x200);
+    expect(cpu.stack[cpu.sp]).toEqual(0x202);
     expect(cpu.pc).toEqual(0xf00);
   });
 });
