@@ -24,7 +24,7 @@ export class Cpu implements ICpu {
     // 16 bit delay and sound timers
     public soundTimer = 0,
     public delayTimer = 0,
-    private _timerId?: ReturnType<typeof setInterval>
+    public _timerId?: ReturnType<typeof setInterval>
   ) {
     // Load hex-sprites into memory (there are 15 of these, starting at memory position 0)
     for (let sprite = 0; sprite <= 0xf; sprite++) {
