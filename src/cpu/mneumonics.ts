@@ -35,4 +35,5 @@ export enum InstructionMneumonic {
   draw = "draw",
   loadHexSprite = "loadHexSprite",
   loadBCD = "loadBCD",
+  storeMem = "storeMem",
 }

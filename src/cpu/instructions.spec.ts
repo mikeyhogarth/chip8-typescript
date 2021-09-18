@@ -14,7 +14,7 @@ describe("instructions", () => {
     // There are 35 opcodes in chip8 - this test is purely here as a
     // gauge to figure out how far along the project is, but will eventually
     // be a test to make sure there are as many opcodes as there should be.
-    expect(Object.keys(instructions).length).toEqual(33);
+    expect(Object.keys(instructions).length).toEqual(34);
   });
 });
 
@@ -597,35 +597,57 @@ describe("loadHexSprite", () => {
       expect(hexSprites[0xf][i]).toEqual(cpu.memory[cpu.i + i]);
     }
   });
+});
 
-  // Fx33 - LD B, Vx
-  describe("loadBCD", () => {
-    // We want to test a bunch of cases for this, but essentially we are testing the
-    // same thing every time, hence some local "test cases" of the format;
-    // [number, expected hundreds, expected tens, expected units]
-    //
-    const testCases = [
-      [0, 0, 0, 0], // minimum number for register
-      [255, 2, 5, 5], // maximum number for register
-      [123, 1, 2, 3],
-      [2, 0, 0, 2],
-      [20, 0, 2, 0],
-      [200, 2, 0, 0],
-      [101, 1, 0, 1],
-    ];
+// Fx33 - LD B, Vx
+describe("loadBCD", () => {
+  // We want to test a bunch of cases for this, but essentially we are testing the
+  // same thing every time, hence some local "test cases" of the format;
+  // [number, expected hundreds, expected tens, expected units]
+  //
+  const testCases = [
+    [0, 0, 0, 0], // minimum number for register
+    [255, 2, 5, 5], // maximum number for register
+    [123, 1, 2, 3],
+    [2, 0, 0, 2],
+    [20, 0, 2, 0],
+    [200, 2, 0, 0],
+    [101, 1, 0, 1],
+  ];
 
-    testCases.forEach((testCase) => {
-      describe(`for number ${testCase[0]}`, () => {
-        it("Store BCD representation of Vx in memory locations I, I+1, and I+2.", () => {
-          cpu.registers[0] = testCase[0];
-          cpu.i = 0x300;
-          instructions.loadBCD.execute(cpu, { x: 0 });
-          expect(cpu.memory[cpu.i]).toEqual(testCase[1]); // hundreds
-          expect(cpu.memory[cpu.i + 1]).toEqual(testCase[2]); // tens
-          expect(cpu.memory[cpu.i + 2]).toEqual(testCase[3]); // units
-          expect(cpu.pc).toEqual(0x202);
-        });
+  testCases.forEach((testCase) => {
+    describe(`for number ${testCase[0]}`, () => {
+      it("Store BCD representation of Vx in memory locations I, I+1, and I+2.", () => {
+        cpu.registers[0] = testCase[0];
+        cpu.i = 0x300;
+        instructions.loadBCD.execute(cpu, { x: 0 });
+        expect(cpu.memory[cpu.i]).toEqual(testCase[1]); // hundreds
+        expect(cpu.memory[cpu.i + 1]).toEqual(testCase[2]); // tens
+        expect(cpu.memory[cpu.i + 2]).toEqual(testCase[3]); // units
+        expect(cpu.pc).toEqual(0x202);
       });
     });
+  });
+});
+
+// Fx55 - LD [I], Vx
+describe("storeMem", () => {
+  it("stores the values of all the registers in memory, starting at I", () => {
+    const x = 4;
+    for (let i = 0; i <= x; i++) {
+      cpu.registers[i] = Math.floor(Math.random() * 100);
+    }
+    cpu.i = 0x300;
+
+    instructions.storeMem.execute(cpu, { x: 4 });
+
+    for (let i = 0; i <= x; i++) {
+      expect(cpu.memory[cpu.i + i]).toEqual(cpu.registers[i]);
+    }
+
+    // Check that the memory immediately before and after has not been affected
+    expect(cpu.memory[cpu.i - 1]).toEqual(0);
+    expect(cpu.memory[cpu.i + x + 1]).toEqual(0);
+    expect(cpu.pc).toEqual(0x202);
   });
 });

@@ -423,4 +423,18 @@ export const instructions: { [key in InstructionMneumonic]: Instruction } = {
       cpu.pc += 2;
     },
   },
+
+  // Fx55 - LD [I], Vx
+  storeMem: {
+    pattern: 0xf055,
+    mask: 0xf0ff,
+    decodeArgs: xDecoder,
+    execute(cpu, args) {
+      const { x } = args as IXArgs;
+      for (let i = 0; i <= x; i++) {
+        cpu.memory[cpu.i + i] = cpu.registers[i];
+      }
+      cpu.pc += 2;
+    },
+  },
 };

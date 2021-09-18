@@ -73,6 +73,8 @@ describe("instruction utils", () => {
     [0xf029, instructions.loadHexSprite, { x: 0 }],
     // Fx33 - LD B, Vx
     [0xf033, instructions.loadBCD, { x: 0 }],
+    // Fx55 - LD [I], Vx
+    [0xf055, instructions.storeMem, { x: 0 }],
   ];
 
   // yes, this is a test FOR the tests to make sure we're fully covered
