@@ -4,10 +4,16 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/52a13e41759a4d6a94b5000386df4464)](https://www.codacy.com/gh/mikeyhogarth/chip8-typescript/dashboard?utm_source=github.com&utm_medium=referral&utm_content=mikeyhogarth/chip8-typescript&utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/mikeyhogarth/chip8-typescript/badge.svg?branch=main)](https://coveralls.io/github/mikeyhogarth/chip8-typescript?branch=main)
 
+## Installation
+Install using NPM;
+```
+npm i typescript-chip8
+```
+
 ## Usage
 
 ```javascript
-import { createCpu } from "typescript-chip8";
+  import { createCpu } from "typescript-chip8";
   let cpu = createCpu();
 
   // Roms are buffers of big-endian 2-byte instructions. You can hard code these...
@@ -22,6 +28,13 @@ import { createCpu } from "typescript-chip8";
 
   // perform 1 CPU cycle (you could put this in a loop/interval to "run" the cpu forever) 
   cpu.cycle();
+```
+
+## Tests
+This emulator is 100% unit tested and covered. Run tests with either of the following;
+```
+npm run test
+npm run test -- --watch
 ```
 
 ## Thank you
