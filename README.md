@@ -41,5 +41,6 @@ npm run test -- --watch
 
 This would not have been possible if not for these excellent guides;
 
-- [Cowgod's Chip-8 Technical Reference v1.0](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
-- [Tania Rasca's emulator guide](https://www.taniarascia.com/writing-an-emulator-in-javascript-chip8/)
+- [Cowgod's Chip-8 Technical Reference v1.0](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) - the main source I used when building this emulator. Covers every opcode.
+- [Tania Rasca's emulator guide](https://www.taniarascia.com/writing-an-emulator-in-javascript-chip8/) - this guide is absolutely amazing and without access to Tania's code to check I was doing things correctly, I probably would not have completed this project.
+- [David Winter's Chip8 page](http://www.pong-story.com/chip8/) - David is the author of many chip8 roms as well as one of the earliest emulators.
