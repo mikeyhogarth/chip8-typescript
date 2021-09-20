@@ -1,15 +1,17 @@
 {
   "name": "typescript-chip8",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Chip8 Emulator, written in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "homepage": "https://github.com/mikeyhogarth/chip8-typescript",
+  "prepublish": "npm run build",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "test": "jest"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mikey H",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
