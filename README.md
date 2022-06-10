@@ -2,6 +2,8 @@
 
 An implementation of a [CHIP8 interpreter](https://en.wikipedia.org/wiki/CHIP-8), written entirely in TypeScript.
 
+If you want to see a demo of this in action, check out my [Svelte Chip8 frontend](https://github.com/mikeyhogarth/chip8-svelte) which uses this module to display the screen output and take user input directly within a browser.
+
 ![npm](https://img.shields.io/npm/v/typescript-chip8)
 ![NPM](https://img.shields.io/npm/l/typescript-chip8)
 [![Build Status](https://app.travis-ci.com/mikeyhogarth/chip8-typescript.svg?branch=main)](https://app.travis-ci.com/mikeyhogarth/chip8-typescript)
